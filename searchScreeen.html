@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>검색 - Oto</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="search-page">
+      <h1 class="page-title">검색</h1>
+
+      <!-- 검색 입력창 -->
+      <div class="search-box">
+        <img src="img/searchIcon.svg" alt="search_icon" class="search-icon" />
+        <input
+          id="searchBox"
+          type="text"
+          class="search-input"
+          placeholder="노래, 아티스트 검색"
+        />
+      </div>
+
+      <!-- 최근 검색어 -->
+      <div class="recent-section">
+        <p class="section-label">최근 검색어</p>
+        <div class="recent-list" id="recentList">
+          <span class="recent-chip">
+            소란해 <button class="chip-delete">×</button>
+          </span>
+          <span class="recent-chip">
+            비 오는 날 <button class="chip-delete">×</button>
+          </span>
+          <span class="recent-chip">
+            이온 <button class="chip-delete">×</button>
+          </span>
+        </div>
+      </div>
+
+      <!-- 검색 결과 -->
+      <div class="result-section">
+        <p class="section-label">검색 결과</p>
+        <ul class="result-list" id="resultList">
+          <li class="result-item">
+            <img src="img/default-thumb.png" alt="" class="result-thumb" />
+            <div class="result-info">
+              <span class="result-title">밤의 항해</span>
+              <span class="result-artist">소란해</span>
+            </div>
+            <span class="result-time">3:24</span>
+            <button class="fav-btn">☆</button>
+          </li>
+
+          <li class="result-item">
+            <img src="img/default-thumb.png" alt="" class="result-thumb" />
+            <div class="result-info">
+              <span class="result-title">푸른 밤</span>
+              <span class="result-artist">소란해</span>
+            </div>
+            <span class="result-time">4:01</span>
+            <button class="fav-btn">☆</button>
+          </li>
+
+          <li class="result-item">
+            <img src="img/default-thumb.png" alt="" class="result-thumb" />
+            <div class="result-info">
+              <span class="result-title">유리병 속 여름</span>
+              <span class="result-artist">소란해, 나비잠</span>
+            </div>
+            <span class="result-time">3:47</span>
+            <button class="fav-btn">☆</button>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <script></script>
+  </body>
+</html>
