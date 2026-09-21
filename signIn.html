@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/signIn.css">
+    <title>로그인 - Oto</title>
+</head>
+<body>
+    <!-- 세션 확인 후 로그아웃 상태일 때만 보인다 (로그인 상태면 home.html 로 이동) -->
+    <div id="logged-out-view" class="signin" hidden>
+
+        <!-- ===== 왼쪽: 브랜드 영역 ===== -->
+        <aside class="signin-brand">
+            <a href="signIn.html" class="brand-logo">
+                <span class="brand-logo__text">Oto<span class="accent-dot">.</span></span>
+            </a>
+
+            <!-- 구 그래픽 (CSS 그라데이션으로 그림) -->
+            <div class="signin-brand__orb" aria-hidden="true">
+                <img src="/img/logo.png" alt="">
+            </div>
+
+            <div class="signin-brand__copy">
+                <p class="signin-brand__headline">
+                    Just the<br>music<span class="accent-dot">.</span>
+                </p>
+                <p class="signin-brand__desc">음악을 방해하는 광고, 피드, 소셜 기능 없이. 오직 듣기에만<br>집중하도록 설계된 플레이어.</p>
+            </div>
+        </aside>
+
+        <!-- ===== 오른쪽: 로그인 폼 영역 ===== -->
+        <main class="signin-panel">
+            <p class="signin-panel__signup">
+                계정이 없으신가요?
+                <a href="signUp.html" class="signin-panel__signup-link">회원가입</a>
+            </p>
+
+            <section class="signin-form-wrap">
+                <h1 class="signin-form-wrap__title">로그인</h1>
+                <p class="signin-form-wrap__subtitle">이메일과 비밀번호를 입력하세요.</p>
+
+                <form id="login-form" class="signin-form">
+                    <!-- 이메일 -->
+                    <div class="form-field">
+                        <label for="login-email" class="form-field__label">이메일</label>
+                        <input
+                            type="email"
+                            id="login-email"
+                            name="email"
+                            class="form-field__input"
+                            autocomplete="off"
+                            required
+                        >
+                    </div>
+
+                    <!-- 비밀번호 -->
+                    <div class="form-field">
+                        <div class="form-field__label-row">
+                            <label for="login-password" class="form-field__label">비밀번호</label>
+                            <a href="#" class="form-field__link">비밀번호 찾기</a>
+                        </div>
+                        <div class="form-field__input-wrap">
+                            <input
+                                type="password"
+                                id="login-password"
+                                name="password"
+                                class="form-field__input"
+                                autocomplete="current-password"
+                                required
+                            >
+                            <button type="button" id="password-toggle" class="form-field__toggle" aria-label="비밀번호 보기" aria-pressed="false">
+                                <!-- 비밀번호 숨김 상태일 때: 눈 아이콘 -->
+                                <svg class="icon icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <!-- 비밀번호 보임 상태일 때: 눈에 사선 아이콘 -->
+                                <svg class="icon icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+                                    <path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.5 0 10 7 10 7a17.6 17.6 0 0 1-2.9 3.9"/>
+                                    <path d="M6.6 6.6C3.8 8.4 2 12 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/>
+                                    <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+                                    <path d="M2 2l20 20"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 로그인 상태 유지 -->
+                    <label class="form-check">
+                        <input type="checkbox" name="remember" class="form-check__input">
+                        <span class="form-check__label">로그인 상태 유지</span>
+                    </label>
+
+                    <button type="submit" class="signin-form__submit">
+                        <span>로그인</span>
+                        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 6l6 6-6 6"/>
+                        </svg>
+                    </button>
+                </form>
+            </section>
+
+        </main>
+    </div>
+
+    <script type="module" src="js/signIn.js"></script>
+</body>
+</html>
