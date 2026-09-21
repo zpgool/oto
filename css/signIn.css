@@ -1,0 +1,195 @@
+* {
+    box-sizing: border-box;
+}
+
+.signin {
+    display: flex;
+}
+
+.brand-logo > .brand-logo__text {
+    font-size: 25px;
+    font-weight: 900;
+}
+
+.signin-brand {
+    padding: 40px 44px;
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    width: 50%;
+    background: linear-gradient(170deg, #3B1810 0%, #2A0F0A 60%, #1F0A06 100%);
+    color: white;
+}
+
+.signin-brand__orb {
+    margin-top: 140px;
+    display: flex;
+    justify-content: center;
+}
+
+.signin-brand__orb > img {
+    width: 460px;
+}
+
+.signin-brand__copy {
+    display: flex;
+    flex-direction: column;
+    gap: 10px
+}
+
+.signin-brand__copy > .signin-brand__headline {
+    font-size: 50px;
+    font-weight: 900;
+    line-height: 1.1;
+}
+
+.signin-brand__copy > .signin-brand__desc {
+    font-size: 16px;
+    color: #ffffff8c
+}
+
+.accent-dot {
+    color: #E86F4E;
+}
+
+
+
+/* ------------------------ main ------------------------- */
+
+.signin-panel {
+    display: flex;
+    flex-direction: column;
+    background-color: #FBFAF7;
+    width: 50%;
+    padding: 40px 60px;
+}
+
+.signin-panel__signup {
+    font-size: 15px;
+    align-self: flex-end;
+    color: #1515138c
+}
+
+.signin-panel__signup-link {
+    color: #E86F4E;
+    font-weight: 700;
+    text-decoration: underline;
+    text-underline-offset: 3px;     /* 글자와 밑줄 사이 간격 */
+    text-decoration-thickness: 1px; /* 밑줄 두께 */
+}
+
+.signin-form-wrap__title {
+    font-size: 50px;
+    font-weight: 800;
+    margin-top: 140px;
+}
+
+.signin-form-wrap__subtitle {
+    color: #1515138C;
+    margin-bottom: 30px;
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    margin-top: 25px;
+    width: 450px;
+}
+
+.form-field__label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1515138C;
+}
+
+.form-field__input {
+    width: 450px;
+    height: 45px;
+    border: none;
+    background: transparent;
+    border-bottom: solid 2px #15151314;
+    font-size: 18px;
+}
+
+.form-field__input:focus {
+    border-bottom: solid 2px #E86F4E;
+}
+
+.form-field__label-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-field__link {
+    font-size: 15px;
+    color: #1515138C
+}
+
+.signin-form__submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    width: 450px;
+    padding: 15px 0;
+    background: linear-gradient(170deg, #3B1810 0%, #2A0F0A 100%);
+    color: white;
+    border-radius: 12px;
+}
+
+/* 체크박스 + 글자 가로 정렬 */
+.form-check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 25px 0;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+/* 1. 기본 모양 지우고 네모 직접 그리기 */
+.form-check__input {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    border: 1.5px solid #d6d1c8;
+    border-radius: 5px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.15s, border-color 0.15s;
+}
+
+/* 2. 체크됐을 때: 주황 배경 + 흰색 체크 표시 */
+.form-check__input:checked {
+    background-color: #E86F4E;
+    border-color: #E86F4E;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12l5 5 9-10'/%3E%3C/svg%3E");
+    background-size: 14px;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* 3. 키보드(Tab)로 선택했을 때 테두리 표시 */
+.form-check__input:focus-visible {
+    outline: 2px solid #E86F4E;
+    outline-offset: 2px;
+}
+
+.form-field__input-wrap {
+    position: relative;
+}
+
+.form-field__input-wrap .form-field__input {
+    padding-right: 36px;   /* 아이콘에 글자가 가려지지 않게 */
+}
+
+.form-field__toggle {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    color: #15151380;
+}
