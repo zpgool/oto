@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/signUp.css">
+    <title>회원가입 - Oto</title>
+</head>
+<body>
+    <!-- 세션 확인 후 로그아웃 상태일 때만 보인다 (로그인 상태면 home.html 로 이동) -->
+    <div id="signup-view" class="signup" hidden>
+
+        <!-- ===== 왼쪽: 브랜드 영역 ===== -->
+        <aside class="signup-brand">
+            <a href="signIn.html" class="brand-logo">
+                <span class="brand-logo__text">Oto<span class="accent-dot">.</span></span>
+            </a>
+
+            <!-- 구 그래픽 -->
+            <div class="signup-brand__orb" aria-hidden="true">
+                <img src="/img/logo.png" alt="">
+            </div>
+
+            <div class="signup-brand__copy">
+                <p class="signup-brand__headline">
+                    Just the<br>music<span class="accent-dot">.</span>
+                </p>
+                <p class="signup-brand__desc">음악을 방해하는 광고, 피드, 소셜 기능 없이. 오직 듣기에만<br>집중하도록 설계된 플레이어.</p>
+            </div>
+        </aside>
+
+        <!-- ===== 오른쪽: 회원가입 폼 영역 ===== -->
+        <main class="signup-panel">
+            <p class="signup-panel__signin">
+                이미 계정이 있으신가요?
+                <a href="signIn.html" class="signup-panel__signin-link">로그인</a>
+            </p>
+
+            <section class="signup-form-wrap">
+                <h1 class="signup-form-wrap__title">회원가입</h1>
+                <p class="signup-form-wrap__subtitle">이메일과 비밀번호로 계정을 만드세요.</p>
+
+                <form id="signup-form" class="signup-form">
+                    <!-- 이메일 -->
+                    <div class="form-field">
+                        <label for="signup-email" class="form-field__label">이메일</label>
+                        <input
+                            type="email"
+                            id="signup-email"
+                            name="email"
+                            class="form-field__input"
+                            autocomplete="off"
+                            required
+                        >
+                    </div>
+
+                    <!-- 비밀번호 -->
+                    <div class="form-field">
+                        <label for="signup-password" class="form-field__label">비밀번호</label>
+                        <div class="form-field__input-wrap">
+                            <input
+                                type="password"
+                                id="signup-password"
+                                name="password"
+                                class="form-field__input"
+                                autocomplete="new-password"
+                                minlength="6"
+                                required
+                            >
+                            <button type="button" id="password-toggle" class="form-field__toggle" aria-label="비밀번호 보기" aria-pressed="false">
+                                <!-- 비밀번호 숨김 상태일 때: 눈 아이콘 -->
+                                <svg class="icon icon-eye" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                                <!-- 비밀번호 보임 상태일 때: 눈에 사선 아이콘 -->
+                                <svg class="icon icon-eye-off" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+                                    <path d="M10.6 5.1A10.4 10.4 0 0 1 12 5c6.5 0 10 7 10 7a17.6 17.6 0 0 1-2.9 3.9"/>
+                                    <path d="M6.6 6.6C3.8 8.4 2 12 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6"/>
+                                    <path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/>
+                                    <path d="M2 2l20 20"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="signup-form__submit">
+                        <span>회원가입</span>
+                        <svg class="icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M9 6l6 6-6 6"/>
+                        </svg>
+                    </button>
+                </form>
+            </section>
+
+        </main>
+    </div>
+
+    <script type="module" src="js/signUp.js"></script>
+</body>
+</html>
