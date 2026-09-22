@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="css/reset.css" />
 </head>
 <body>
-    <div class="app">
+    <!-- 세션 확인 후 로그인 상태일 때만 보인다 (로그아웃 상태면 signIn.html 로 이동) -->
+    <div id="home-view" class="app" hidden>
         <!-- ****** 사이드 바 ****** -->
         <aside class="sidebar">
             <div class="logo">
@@ -61,8 +62,9 @@
                     <button type="button" aria-label="앞으로 가기">＞</button>
                 </div>
                 <form class="search-form" role="search">
-                    <input type="search" id="search-input" placeholder="노래 검색">
+                    <input type="search" id="search-input" placeholder="노래 검색" autocomplete="off">
                 </form>
+                <button id="logout-button">로그아웃</button>
             </header>
 
             <main class="content">
@@ -150,5 +152,6 @@
     <div id="yt-player" style="display:none;"></div>
 
     <!-- <script src="js/app.js" type="module"></script> -->
+    <script type="module" src="js/home.js"></script>
 </body>
 </html>
