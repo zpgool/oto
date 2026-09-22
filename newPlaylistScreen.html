@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oto.</title>
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/playlistScreen.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+  </head>
+  <body>
+    <div class="app">
+      <!-- ****** 사이드 바 ****** -->
+      <aside class="sidebar">
+        <div class="logo">
+          <span class="logo-mark"></span>
+          <h1>Oto.</h1>
+        </div>
+
+        <nav class="nav-main">
+          <ul>
+            <li><a href="#" class="active">홈</a></li>
+            <li><a href="#">검색</a></li>
+            <li><a href="#">즐겨찾기</a></li>
+            <li><a href="#">내 재생 차트</a></li>
+          </ul>
+        </nav>
+
+        <div class="nav-playlist">
+          <div class="nav-playlist-head">
+            <span>내 플레이리스트</span>
+            <button
+              type="button"
+              class="btn-add-playlist"
+              aria-label="플레이리스트 추가"
+            >
+              +
+            </button>
+          </div>
+          <ul id="playlist-list">
+            <li>
+              <a href="#">
+                <span class="pl-thumb"></span>
+                <span class="pl-info">
+                  <span class="pl-name">BrUnOm4rs</span>
+                  <span class="pl-count">12곡</span>
+                </span>
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <div class="user-profile">
+          <span class="user-avatar"></span>
+          <span class="user-info">
+            <span class="user-name">Jungwon</span>
+            <span class="user-email">Jungwon@oto.com</span>
+          </span>
+        </div>
+      </aside>
+
+      <!-- ******* 홈 메인 ****** -->
+      <div class="main">
+        <header class="topbar">
+          <div class="topbar-nav">
+            <button type="button" aria-label="뒤로 가기">＜</button>
+            <button type="button" aria-label="앞으로 가기">＞</button>
+          </div>
+          <form class="search-form" role="search">
+            <input type="search" id="search-input" placeholder="노래 검색" />
+          </form>
+        </header>
+
+        <main class="content content-pl">
+          <section class="pl-hero empty">
+            <button type="button" class="pl-cover-empty" aria-label="커버 추가">
+              ＋
+            </button>
+            <div class="pl-meta">
+              <span class="pl-label">플레이리스트</span>
+              <input
+                type="text"
+                class="pl-title-input"
+                value="새 플레이리스트"
+              />
+              <span class="pl-sub">Jungwon · 0곡</span>
+            </div>
+          </section>
+
+          <div class="pl-actions">
+            <button
+              type="button"
+              class="btn-play-circle disabled"
+              aria-label="재생"
+            >
+              ▶
+            </button>
+            <button type="button" class="btn-line">제목 편집</button>
+            <button type="button" class="btn-line">＋ 노래 추가</button>
+          </div>
+
+          <!-- 빈 상태 -->
+          <div class="empty-box">
+            <p class="empty-title">아직 곡이 없어요</p>
+            <p class="empty-desc">검색 화면에서 노래를 추가해보세요.</p>
+          </div>
+        </main>
+      </div>
+
+      <!-- ****** 플레이어 바(하단) ****** -->
+      <footer class="player">
+        <div class="player-track">
+          <span class="track-cover"></span>
+          <span class="track-info">
+            <span class="track-title">Supernatural</span>
+            <span class="track-artist">NewJeans</span>
+          </span>
+          <button type="button" class="btn-like" aria-label="즐겨찾기">
+            ♥
+          </button>
+        </div>
+
+        <div class="player-controls">
+          <div class="control-buttons">
+            <button type="button" aria-label="셔플">⇄</button>
+            <button type="button" aria-label="이전 곡">◀</button>
+            <button type="button" class="btn-play" aria-label="재생/일시정지">
+              ⏸
+            </button>
+            <button type="button" aria-label="다음 곡">▶</button>
+            <button type="button" aria-label="반복">⟳</button>
+          </div>
+          <div class="progress">
+            <span class="time-current">1:26</span>
+            <input
+              type="range"
+              class="progress-bar"
+              min="0"
+              max="100"
+              value="30"
+            />
+            <span class="time-total">-3:26</span>
+          </div>
+        </div>
+
+        <div class="player-extra">
+          <button type="button" aria-label="재생 목록">☰</button>
+          <button type="button" aria-label="음소거">🔈</button>
+          <input type="range" class="volume-bar" min="0" max="100" value="70" />
+        </div>
+      </footer>
+    </div>
+
+    <div id="yt-player" style="display: none"></div>
+
+    <!-- <script src="js/app.js" type="module"></script> -->
+  </body>
+</html>
