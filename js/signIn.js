@@ -2,7 +2,7 @@
 import { signIn, getSession, onAuthChange } from './auth.js'
 import { setupPasswordToggle } from './passwordToggle.js'
 
-const HOME_PAGE = 'home.html'
+const HOME_PAGE = 'homeScreen.html'
 
 // ---- DOM ----
 const loginForm = document.querySelector('#login-form')
