@@ -24,6 +24,7 @@
   align-items: center;
   gap: 10px;
   padding: 4px 8px 20px;
+  cursor: pointer;
 }
 .logo-mark {
   width: 26px;
