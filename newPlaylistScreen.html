@@ -11,53 +11,8 @@
   <body>
     <div class="app">
       <!-- ****** 사이드 바 ****** -->
-      <aside class="sidebar">
-        <div class="logo">
-          <span class="logo-mark"></span>
-          <h1>Oto.</h1>
-        </div>
-
-        <nav class="nav-main">
-          <ul>
-            <li><a href="#" class="active">홈</a></li>
-            <li><a href="#">검색</a></li>
-            <li><a href="#">즐겨찾기</a></li>
-            <li><a href="#">내 재생 차트</a></li>
-          </ul>
-        </nav>
-
-        <div class="nav-playlist">
-          <div class="nav-playlist-head">
-            <span>내 플레이리스트</span>
-            <button
-              type="button"
-              class="btn-add-playlist"
-              aria-label="플레이리스트 추가"
-            >
-              +
-            </button>
-          </div>
-          <ul id="playlist-list">
-            <li>
-              <a href="#">
-                <span class="pl-thumb"></span>
-                <span class="pl-info">
-                  <span class="pl-name">BrUnOm4rs</span>
-                  <span class="pl-count">12곡</span>
-                </span>
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="user-profile">
-          <span class="user-avatar"></span>
-          <span class="user-info">
-            <span class="user-name">Jungwon</span>
-            <span class="user-email">Jungwon@oto.com</span>
-          </span>
-        </div>
-      </aside>
+      <!-- 사이드바: partials/sidebar.html 을 js/sidebar.js 가 여기에 넣는다 -->
+      <div id="sidebar"></div>
 
       <!-- ******* 홈 메인 ****** -->
       <div class="main">
@@ -154,5 +109,6 @@
     <div id="yt-player" style="display: none"></div>
 
     <!-- <script src="js/app.js" type="module"></script> -->
-  </body>
+    <script type="module" src="js/sidebar.js"></script>
+</body>
 </html>

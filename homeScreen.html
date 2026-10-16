@@ -9,49 +9,11 @@
     <link rel="stylesheet" href="css/reset.css" />
 </head>
 <body>
-    <div class="app">
+    <!-- 세션 확인 후 로그인 상태일 때만 보인다 (로그아웃 상태면 signIn.html 로 이동) -->
+    <div id="home-view" class="app" hidden>
         <!-- ****** 사이드 바 ****** -->
-        <aside class="sidebar">
-            <div class="logo">
-                <span class="logo-mark"></span>
-                <h1>Oto.</h1>
-            </div>
-
-            <nav class="nav-main">
-                <ul>
-                    <li><a href="#" class="active">홈</a></li>
-                    <li><a href="#">검색</a></li>
-                    <li><a href="#">즐겨찾기</a></li>
-                    <li><a href="#">내 재생 차트</a></li>
-                </ul>
-            </nav>
-
-            <div class="nav-playlist">
-                <div class="nav-playlist-head">
-                    <span>내 플레이리스트</span>
-                    <button type="button" class="btn-add-playlist" aria-label="플레이리스트 추가">+</button>
-                </div>
-                <ul id="playlist-list">
-                    <li>
-                        <a href="#">
-                            <span class="pl-thumb"></span>
-                            <span class="pl-info">
-                                <span class="pl-name">BrUnOm4rs</span>
-                                <span class="pl-count">12곡</span>
-                            </span>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-
-            <div class="user-profile">
-                <span class="user-avatar"></span>
-                <span class="user-info">
-                    <span class="user-name">Jungwon</span>
-                    <span class="user-email">Jungwon@oto.com</span>
-                </span>
-            </div>
-        </aside>
+        <!-- 사이드바: partials/sidebar.html 을 js/sidebar.js 가 여기에 넣는다 -->
+        <div id="sidebar"></div>
 
         <!-- ******* 홈 메인 ****** -->
         <div class="main">
@@ -60,12 +22,19 @@
                     <button type="button" aria-label="뒤로 가기">＜</button>
                     <button type="button" aria-label="앞으로 가기">＞</button>
                 </div>
-                <form class="search-form" role="search">
-                    <input type="search" id="search-input" placeholder="노래 검색">
+                <form class="search-form" id="search-form" role="search">
+                    <input type="search" id="search-input" placeholder="노래 검색" autocomplete="off">
                 </form>
+                <button id="logout-button">로그아웃</button>
             </header>
 
             <main class="content">
+                <!-- 검색 결과 (검색했을 때만 보인다) -->
+                <section class="search-results" id="search-results" hidden>
+                    <h3 class="section-title" id="search-result-title"></h3>
+                    <ul class="track-list" id="search-result-list"></ul>
+                </section>
+
                 <section class="greeting">
                     <p class="greeting-sub">안녕하세요</p>
                     <h2 class="greeting-name">Jungwon.</h2>
@@ -150,5 +119,8 @@
     <div id="yt-player" style="display:none;"></div>
 
     <!-- <script src="js/app.js" type="module"></script> -->
+    <script type="module" src="js/home.js"></script>
+    <script type="module" src="js/search.js"></script>
+  <script type="module" src="js/sidebar.js"></script>
 </body>
 </html>
