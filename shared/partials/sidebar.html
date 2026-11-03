@@ -7,10 +7,11 @@
 
     <nav class="nav-main">
         <ul>
-            <li><a href="../home/homeScreen.html">홈</a></li>
-            <li><a href="../search/searchScreen.html">검색</a></li>
-            <li><a href="#">즐겨찾기</a></li>
-            <li><a href="../chart/personalChartScreen.html">내 재생 차트</a></li>
+            <li><a href="#/home">홈</a></li>
+            <li><a href="#/search">검색</a></li>
+            <!-- 즐겨찾기는 아직 화면이 없어서 눌러도 넘어가지 않는다 -->
+            <li><a href="#" aria-disabled="true">즐겨찾기</a></li>
+            <li><a href="#/chart">내 재생 차트</a></li>
         </ul>
     </nav>
 
@@ -21,7 +22,7 @@
         </div>
         <ul id="playlist-list">
             <li>
-                <a href="../playlist/playlistScreen.html">
+                <a href="#/playlist">
                     <span class="pl-thumb"></span>
                     <span class="pl-info">
                         <span class="pl-name">BrUnOm4rs</span>

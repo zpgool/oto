@@ -1,101 +1,66 @@
-<!doctype html>
-<html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Oto.</title>
-    <link rel="stylesheet" href="../../shared/css/reset.css" />
-    <link rel="stylesheet" href="../../shared/css/common.css" />
-    <link rel="stylesheet" href="playlistScreen.css" />
-</head>
-  <body>
-    <div class="app">
-      <!-- ****** 사이드 바 ****** -->
-      <!-- 사이드바: shared/partials/sidebar.html 을 shared/js/sidebar.js 가 여기에 넣는다 -->
-      <div id="sidebar"></div>
+<!-- 플레이리스트 화면. 통째로 된 페이지가 아니라 app.html 안쪽에 들어가는 조각이다.
+     shared/js/router.js 가 주소가 바뀔 때 이 파일을 읽어서 #view 에 넣는다.
+     그래서 이 파일을 브라우저로 직접 열면 디자인 없이 글자만 보인다. -->
+<!-- 헤더 (그라데이션 배경) -->
+<section class="pl-hero">
+    <div class="pl-cover"></div>
+    <div class="pl-meta">
+        <span class="pl-label">플레이리스트</span>
+        <h1 class="pl-title">Late Night Solo</h1>
+        <p class="pl-desc">For empty streets and closed eyes.</p>
+        <span class="pl-sub">Jungwon · 10곡</span>
+    </div>
+</section>
 
-      <!-- ******* 홈 메인 ****** -->
-      <div class="main">
-        <header class="topbar">
-          <div class="topbar-nav">
-            <button type="button" aria-label="뒤로 가기">＜</button>
-            <button type="button" aria-label="앞으로 가기">＞</button>
-          </div>
-        </header>
+<!-- 액션 버튼 -->
+<div class="pl-actions">
+    <button type="button" class="btn-play-circle" aria-label="재생">▶</button>
+    <button type="button" class="btn-line">제목 편집</button>
+    <button type="button" class="btn-line">＋ 노래 추가</button>
+</div>
 
-        <main class="content content-pl">
-    <!-- 헤더 (그라데이션 배경) -->
-    <section class="pl-hero">
-        <div class="pl-cover"></div>
-        <div class="pl-meta">
-            <span class="pl-label">플레이리스트</span>
-            <h1 class="pl-title">Late Night Solo</h1>
-            <p class="pl-desc">For empty streets and closed eyes.</p>
-            <span class="pl-sub">Jungwon · 10곡</span>
-        </div>
-    </section>
-
-    <!-- 액션 버튼 -->
-    <div class="pl-actions">
-        <button type="button" class="btn-play-circle" aria-label="재생">▶</button>
-        <button type="button" class="btn-line">제목 편집</button>
-        <button type="button" class="btn-line">＋ 노래 추가</button>
+<!-- 곡 테이블 -->
+<div class="track-table">
+    <div class="table-head">
+        <span class="col-drag"></span>
+        <span class="col-num">#</span>
+        <span class="col-title">제목</span>
+        <span class="col-album">앨범</span>
+        <span class="col-like">♡</span>
+        <span class="col-del">×</span>
+        <span class="col-time">🕘</span>
     </div>
 
-    <!-- 곡 테이블 -->
-    <div class="track-table">
-        <div class="table-head">
-            <span class="col-drag"></span>
-            <span class="col-num">#</span>
-            <span class="col-title">제목</span>
-            <span class="col-album">앨범</span>
-            <span class="col-like">♡</span>
-            <span class="col-del">×</span>
-            <span class="col-time">🕘</span>
-        </div>
-
-        <!-- 곡 행 (예시) -->
-        <div class="table-row" draggable="true">
-            <span class="col-drag">⠿</span>
-            <span class="col-num">01</span></span>
-            <span class="col-title">
-                <span class="row-thumb"></span>
-                <span class="row-info">
-                    <span class="row-name playing">Supernatural</span>
-                    <span class="row-artist">NewJeans</span>
-                </span>
+    <!-- 곡 행 (예시) -->
+    <div class="table-row" draggable="true">
+        <span class="col-drag">⠿</span>
+        <span class="col-num">01</span></span>
+        <span class="col-title">
+            <span class="row-thumb"></span>
+            <span class="row-info">
+                <span class="row-name playing">Supernatural</span>
+                <span class="row-artist">NewJeans</span>
             </span>
-            <span class="col-album">Supernatural</span>
-            <button class="col-like liked" aria-label="즐겨찾기">♥</button>
-            <button class="col-del" aria-label="삭제">×</button>
-            <span class="col-time">3:26</span>
-        </div>
+        </span>
+        <span class="col-album">Supernatural</span>
+        <button class="col-like liked" aria-label="즐겨찾기">♥</button>
+        <button class="col-del" aria-label="삭제">×</button>
+        <span class="col-time">3:26</span>
+    </div>
 
-        <div class="table-row" draggable="true">
-            <span class="col-drag">⠿</span>
-            <span class="col-num">02</span>
-            <span class="col-title">
-                <span class="row-thumb"></span>
-                <span class="row-info">
-                    <span class="row-name">Love wins all</span>
-                    <span class="row-artist">IU</span>
-                </span>
+    <div class="table-row" draggable="true">
+        <span class="col-drag">⠿</span>
+        <span class="col-num">02</span>
+        <span class="col-title">
+            <span class="row-thumb"></span>
+            <span class="row-info">
+                <span class="row-name">Love wins all</span>
+                <span class="row-artist">IU</span>
             </span>
-            <span class="col-album">The Winning</span>
-            <button class="col-like liked" aria-label="즐겨찾기">♥</button>
-            <button class="col-del" aria-label="삭제">×</button>
-            <span class="col-time">4:14</span>
-        </div>
+        </span>
+        <span class="col-album">The Winning</span>
+        <button class="col-like liked" aria-label="즐겨찾기">♥</button>
+        <button class="col-del" aria-label="삭제">×</button>
+        <span class="col-time">4:14</span>
     </div>
-</main>
-      </div>
-
-    </div>
-
-    <!-- 플레이어 바: shared/partials/player.html 을 shared/js/player.js 가 여기에 넣는다 -->
-    <div id="player"></div>
-
-    <script type="module" src="../../shared/js/sidebar.js"></script>
-    <script type="module" src="../../shared/js/player.js"></script>
-</body>
-</html>
+</div>

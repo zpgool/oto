@@ -4,9 +4,14 @@
 const PLAYER_PATH = new URL('../partials/player.html', import.meta.url)
 const IFRAME_API_SRC = 'https://www.youtube.com/iframe_api'
 
+// 새로고침해도 듣던 자리에서 이어 듣도록 저장해 두는 곳.
+// sessionStorage 라서 그 탭에서만 쓰이고, 탭을 닫으면 지워진다.
+const STORAGE_KEY = 'oto.player'
+
 let ui = {}
 let ytPlayer = null
 let progressTimer = null
+let currentTrack = null
 
 // ---- 화면 ----
 // 초 단위를 0:00 모양으로 바꾼다.
@@ -25,6 +30,14 @@ function setFill(input) {
   const ratio = (Number(input.value) - min) / (max - min)
 
   input.style.setProperty('--fill', `${ratio * 100}%`)
+}
+
+// 첫 곡을 걸면 잠가둔 버튼들을 풀고 회색 상태를 벗긴다.
+function unlockControls() {
+  ui.player.classList.remove('is-empty')
+  ui.locked.forEach((element) => {
+    element.disabled = false
+  })
 }
 
 // 재생 중인지 아닌지를 화면에 반영한다.
@@ -49,6 +62,8 @@ async function renderPlayerBar() {
 
   ui = {
     player: document.querySelector('.player'),
+    // 곡을 걸기 전까지 잠가둔 버튼과 재생바
+    locked: [...document.querySelectorAll('.player [disabled]')],
     eq: document.querySelector('#playing-eq'),
     cover: document.querySelector('#track-cover'),
     title: document.querySelector('#track-title'),
@@ -62,6 +77,35 @@ async function renderPlayerBar() {
   }
 
   return true
+}
+
+// ---- 듣던 자리 기억하기 ----
+// 저장소를 못 쓰는 상황(사생활 보호 모드 등)이 있어서 전부 try 로 감싼다.
+function saveState() {
+  if (!ytPlayer || !currentTrack) return
+
+  try {
+    sessionStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify({
+        track: currentTrack,
+        seconds: ytPlayer.getCurrentTime(),
+        volume: Number(ui.volumeBar.value),
+        wasPlaying: ytPlayer.getPlayerState() === window.YT.PlayerState.PLAYING,
+      }),
+    )
+  } catch {
+    // 저장이 안 돼도 재생에는 지장이 없으니 그냥 넘어간다.
+  }
+}
+
+function loadState() {
+  try {
+    const saved = JSON.parse(sessionStorage.getItem(STORAGE_KEY))
+    return saved?.track?.videoId ? saved : null
+  } catch {
+    return null
+  }
 }
 
 // ---- 유튜브 플레이어 ----
@@ -122,7 +166,7 @@ function updateProgress() {
 }
 
 function handleStateChange(event) {
-  const { PLAYING, ENDED } = window.YT.PlayerState
+  const { PLAYING, PAUSED, ENDED } = window.YT.PlayerState
 
   setPlaying(event.data === PLAYING)
 
@@ -136,6 +180,12 @@ function handleStateChange(event) {
     ui.progressBar.value = '0'
     setFill(ui.progressBar)
     ui.timeCurrent.textContent = '0:00'
+  }
+
+  // 곡을 불러오는 중(BUFFERING)에는 재생 위치가 아직 0 이라서 저장하지 않는다.
+  // 그때 저장하면 새로고침으로 되살려둔 위치를 0 으로 덮어쓴다.
+  if ([PLAYING, PAUSED, ENDED].includes(event.data)) {
+    saveState()
   }
 }
 
@@ -202,17 +252,41 @@ const ready = (async () => {
   if (!(await renderPlayerBar())) return null
 
   ytPlayer = await createPlayer(await loadIframeApi())
+  setupControls()
+
+  // 새로고침 직전에 듣던 곡이 있으면 그 자리에 다시 걸어둔다.
+  const saved = loadState()
+
+  ui.volumeBar.value = String(saved?.volume ?? Number(ui.volumeBar.value))
   ytPlayer.setVolume(Number(ui.volumeBar.value))
   setFill(ui.volumeBar)
-  setupControls()
+
+  if (saved) {
+    showTrack(saved.track)
+
+    const where = { videoId: saved.track.videoId, startSeconds: saved.seconds }
+
+    // 듣고 있었으면 이어서 틀고, 멈춰 있었으면 걸어만 둔다.
+    // 다만 브라우저가 '사용자가 누르지 않은 재생'을 막는 경우가 있어서,
+    // 소리가 안 나면 재생 버튼을 한 번 눌러야 한다.
+    if (saved.wasPlaying) {
+      ytPlayer.loadVideoById(where)
+    } else {
+      ytPlayer.cueVideoById(where)
+    }
+  }
+
+  // 페이지를 떠나기 직전(새로고침 포함)에 듣던 자리를 적어둔다.
+  window.addEventListener('pagehide', saveState)
 
   return ytPlayer
 })()
 
-// ---- 바깥에서 쓰는 함수 ----
-// 곡 하나를 재생한다. 플레이어가 아직 준비 중이면 준비될 때까지 기다린다.
-export async function playTrack(track) {
-  if (!(await ready)) return
+// 곡 정보를 플레이어 바에 올린다.
+function showTrack(track) {
+  currentTrack = track
+
+  unlockControls()
 
   ui.cover.src = track.thumbnail
   ui.title.textContent = track.title
@@ -221,6 +295,13 @@ export async function playTrack(track) {
   ui.progressBar.value = '0'
   setFill(ui.progressBar)
   ui.timeCurrent.textContent = '0:00'
+}
 
+// ---- 바깥에서 쓰는 함수 ----
+// 곡 하나를 재생한다. 플레이어가 아직 준비 중이면 준비될 때까지 기다린다.
+export async function playTrack(track) {
+  if (!(await ready)) return
+
+  showTrack(track)
   ytPlayer.loadVideoById(track.videoId)
 }
