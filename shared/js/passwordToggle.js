@@ -1,4 +1,4 @@
-// js/passwordToggle.js
+// shared/js/passwordToggle.js
 // 눈 아이콘 버튼을 누르면 비밀번호를 보여주거나 숨긴다. (로그인/회원가입 공통)
 // 버튼 안에 .icon-eye, .icon-eye-off 두 SVG 가 있어야 한다.
 export function setupPasswordToggle(passwordInput, toggleButton) {

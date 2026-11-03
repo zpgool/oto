@@ -81,3 +81,8 @@
 .result-summary strong {
   color: var(--text-strong);
 }
+
+/* 결과 행은 눌러서 재생할 수 있다 */
+.table-row {
+  cursor: pointer;
+}

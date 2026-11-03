@@ -1,8 +1,8 @@
-// js/signIn.js
-import { signIn, getSession, onAuthChange } from './auth.js'
-import { setupPasswordToggle } from './passwordToggle.js'
+// features/auth/signIn.js
+import { signIn, getSession, onAuthChange } from '../../shared/js/auth.js'
+import { setupPasswordToggle } from '../../shared/js/passwordToggle.js'
 
-const HOME_PAGE = 'homeScreen.html'
+const HOME_PAGE = '../../app.html#/home'
 
 // ---- DOM ----
 const loginForm = document.querySelector('#login-form')

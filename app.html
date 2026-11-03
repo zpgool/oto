@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Oto.</title>
+
+    <!-- 공통 스타일 -->
+    <link rel="stylesheet" href="shared/css/reset.css" />
+    <link rel="stylesheet" href="shared/css/common.css" />
+
+    <!-- 화면별 스타일.
+         화면을 옮겨도 페이지를 새로 읽지 않기 때문에 여기서 한 번에 받아둔다.
+         화면마다 쓰는 클래스 이름이 겹치지 않아서 같이 올려도 서로 영향이 없다. -->
+    <link rel="stylesheet" href="features/home/homeScreen.css" />
+    <link rel="stylesheet" href="features/search/searchScreen.css" />
+    <link rel="stylesheet" href="features/chart/personalChartScreen.css" />
+    <link rel="stylesheet" href="features/playlist/playlistScreen.css" />
+  </head>
+
+  <!-- 로그인 여부를 확인할 때까지 아무것도 보여주지 않는다. shared/js/app.js 가 열어준다. -->
+  <body hidden>
+    <div class="app">
+      <!-- ****** 사이드 바 ****** -->
+      <!-- 사이드바: shared/partials/sidebar.html 을 shared/js/sidebar.js 가 여기에 넣는다 -->
+      <div id="sidebar"></div>
+
+      <div class="main">
+        <header class="topbar">
+          <div class="topbar-nav">
+            <button type="button" id="btn-back" aria-label="뒤로 가기">＜</button>
+            <button type="button" id="btn-forward" aria-label="앞으로 가기">＞</button>
+          </div>
+          <button id="logout-button">로그아웃</button>
+        </header>
+
+        <!-- 화면 내용이 들어오는 자리.
+             주소(#/home, #/search ...)가 바뀌면 shared/js/router.js 가 여기만 갈아 끼운다. -->
+        <main class="content" id="view"></main>
+      </div>
+    </div>
+
+    <!-- 플레이어 바: shared/partials/player.html 을 shared/js/player.js 가 여기에 넣는다.
+         화면을 옮겨도 이 자리는 그대로 남아 있어서 음악이 끊기지 않는다. -->
+    <div id="player"></div>
+
+    <script type="module" src="shared/js/app.js"></script>
+    <script type="module" src="shared/js/sidebar.js"></script>
+    <script type="module" src="shared/js/player.js"></script>
+  </body>
+</html>
