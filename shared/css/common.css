@@ -329,7 +329,7 @@
   justify-content: center;
   font-size: 16px;
 }
-.btn-play:hover {
+.btn-play:hover:not(:disabled) {
   transform: scale(1.05);
 }
 .progress {
@@ -348,6 +348,90 @@
 .progress-bar {
   flex: 1;
 }
+
+/* 막대 두 개(재생 위치 / 음량) 공통.
+   --fill 은 player.js 가 퍼센트로 넣어준다.
+   지나간 쪽은 글자색만큼 진하게, 남은 쪽은 연한 실버. (밝은 배경이라 명암을 뒤집었다)
+   reset.css 의 input[type="range"] 보다 우선순위를 맞추려고 앞에 input 을 붙였다. */
+input.progress-bar,
+input.volume-bar {
+  --fill: 0%;
+  appearance: none;
+  -webkit-appearance: none;
+  height: 4px;
+  border-radius: 999px;
+  cursor: pointer;
+  background: linear-gradient(
+    to right,
+    var(--text-strong) 0 var(--fill),
+    var(--border) var(--fill) 100%
+  );
+}
+input.progress-bar:focus-visible,
+input.volume-bar:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* 손잡이(동그라미). 크롬과 파이어폭스는 선택자가 달라서 따로 적어야 한다. */
+input.progress-bar::-webkit-slider-thumb,
+input.volume-bar::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  background: var(--text-strong);
+  transition: transform 0.15s;
+}
+input.progress-bar::-moz-range-thumb,
+input.volume-bar::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border: none;
+  border-radius: 50%;
+  background: var(--text-strong);
+  transition: transform 0.15s;
+}
+input.progress-bar:hover:not(:disabled)::-webkit-slider-thumb,
+input.volume-bar:hover:not(:disabled)::-webkit-slider-thumb {
+  transform: scale(1.25);
+}
+input.progress-bar:hover:not(:disabled)::-moz-range-thumb,
+input.volume-bar:hover:not(:disabled)::-moz-range-thumb {
+  transform: scale(1.25);
+}
+
+/* =========================================
+   재생 중인 곡이 없을 때 (is-empty)
+   - 조작할 수 없는 것은 회색으로 흐리게
+========================================= */
+.player button:disabled {
+  color: var(--text-muted);
+  cursor: default;
+}
+.player button:disabled:hover {
+  color: var(--text-muted);
+}
+.btn-play:disabled {
+  background: var(--text-muted);
+  color: var(--bg-sidebar) !important;
+}
+/* 썸네일 자리의 주황색 그라데이션도 빼고 회색으로 */
+.player.is-empty .track-cover {
+  background: var(--border);
+}
+/* 막대도 전부 회색. 지나간 부분 표시가 의미 없으므로 한 가지 색으로 둔다. */
+input.progress-bar:disabled {
+  background: var(--border);
+  cursor: default;
+}
+input.progress-bar:disabled::-webkit-slider-thumb {
+  background: var(--border);
+}
+input.progress-bar:disabled::-moz-range-thumb {
+  background: var(--border);
+}
 .player-extra {
   display: flex;
   align-items: center;
@@ -363,6 +447,59 @@
 }
 .volume-bar {
   width: 90px;
+}
+
+/* =========================================
+   재생 중 표시
+========================================= */
+.track-cover-wrap {
+  position: relative;
+  flex-shrink: 0;
+  line-height: 0;
+}
+/* 썸네일을 살짝 덮고 그 위에서 막대 3개가 움직인다 */
+.eq {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.45);
+}
+.eq i {
+  width: 3px;
+  height: 16px;
+  border-radius: 2px;
+  background: #fff;
+  animation: eq-bounce 1s ease-in-out infinite;
+}
+.eq i:nth-child(2) {
+  animation-delay: -0.35s;
+}
+.eq i:nth-child(3) {
+  animation-delay: -0.7s;
+}
+@keyframes eq-bounce {
+  0%,
+  100% {
+    transform: scaleY(0.35);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+/* 재생 중일 때 곡 제목도 주황색으로 */
+.player.is-playing .track-title {
+  color: var(--accent);
+}
+/* 움직임을 줄이는 설정을 켠 사용자에게는 멈춰 있는 막대만 보여준다 */
+@media (prefers-reduced-motion: reduce) {
+  .eq i {
+    animation: none;
+    transform: scaleY(0.7);
+  }
 }
 
 /* =========================================
@@ -467,4 +604,22 @@
 .eq-icon {
   color: var(--accent);
   font-size: 12px;
+}
+
+/* =========================================
+   유튜브 플레이어 (소리만 쓰므로 화면 밖으로)
+========================================= */
+.yt-frame {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 플레이어 바의 앨범 이미지 */
+.track-cover {
+  object-fit: cover;
 }

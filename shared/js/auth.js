@@ -1,11 +1,11 @@
-// js/auth.js
+// shared/js/auth.js
 // 로그인/회원가입 페이지가 같이 쓰는 인증 함수 모음.
 // 화면(DOM)은 건드리지 않고, 각 페이지 스크립트(signIn.js, signUp.js)가 가져다 쓴다.
 import { supabase } from './supabase.js'
 
 // 회원가입
 // 확인 메일의 링크를 누르면 redirectPath 페이지로 돌아온다.
-export async function signUp(email, password, redirectPath = 'signIn.html') {
+export async function signUp(email, password, redirectPath = '../auth/signIn.html') {
   return supabase.auth.signUp({
     email,
     password,

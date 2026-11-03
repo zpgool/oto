@@ -1,0 +1,47 @@
+<!-- 홈 화면. 통째로 된 페이지가 아니라 app.html 안쪽에 들어가는 조각이다.
+     shared/js/router.js 가 주소가 바뀔 때 이 파일을 읽어서 #view 에 넣는다.
+     그래서 이 파일을 브라우저로 직접 열면 디자인 없이 글자만 보인다. -->
+<section class="greeting">
+    <p class="greeting-sub">안녕하세요</p>
+    <h2 class="greeting-name">Jungwon.</h2>
+</section>
+
+<section class="shortcuts">
+    <h3 class="section-title">바로 가기</h3>
+    <ul class="shortcut-grid">
+        <li class="shortcut-card">
+            <a href="#">
+                <span class="shortcut-thumb favorite"></span>
+                <span class="shortcut-info">
+                    <span class="shortcut-name">즐겨찾기</span>
+                    <span class="shortcut-count">6곡</span>
+                </span>
+            </a>
+        </li>
+        <li class="shortcut-card">
+            <a href="#">
+                <span class="shortcut-thumb"></span>
+                <span class="shortcut-info">
+                    <span class="shortcut-name">BrUnOm4rs</span>
+                    <span class="shortcut-count">12곡</span>
+                </span>
+            </a>
+        </li>
+    </ul>
+</section>
+
+<section class="playlists">
+    <div class="section-head">
+        <h3 class="section-title">플레이리스트</h3>
+        <button type="button" class="btn-new-playlist">＋ 새 플레이리스트</button>
+    </div>
+    <ul class="playlist-grid" id="playlist-grid">
+        <li class="playlist-card">
+            <a href="#">
+                <span class="card-cover"></span>
+                <span class="card-title">BrUnOm4rs</span>
+                <span class="card-desc">12곡 · 37m</span>
+            </a>
+        </li>
+    </ul>
+</section>

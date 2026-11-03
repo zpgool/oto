@@ -1,0 +1,35 @@
+<!-- 새 플레이리스트 화면. 통째로 된 페이지가 아니라 app.html 안쪽에 들어가는 조각이다.
+     shared/js/router.js 가 주소가 바뀔 때 이 파일을 읽어서 #view 에 넣는다.
+     그래서 이 파일을 브라우저로 직접 열면 디자인 없이 글자만 보인다. -->
+<section class="pl-hero empty">
+  <button type="button" class="pl-cover-empty" aria-label="커버 추가">
+    ＋
+  </button>
+  <div class="pl-meta">
+    <span class="pl-label">플레이리스트</span>
+    <input
+      type="text"
+      class="pl-title-input"
+      value="새 플레이리스트"
+    />
+    <span class="pl-sub">Jungwon · 0곡</span>
+  </div>
+</section>
+
+<div class="pl-actions">
+  <button
+    type="button"
+    class="btn-play-circle disabled"
+    aria-label="재생"
+  >
+    ▶
+  </button>
+  <button type="button" class="btn-line">제목 편집</button>
+  <button type="button" class="btn-line">＋ 노래 추가</button>
+</div>
+
+<!-- 빈 상태 -->
+<div class="empty-box">
+  <p class="empty-title">아직 곡이 없어요</p>
+  <p class="empty-desc">검색 화면에서 노래를 추가해보세요.</p>
+</div>
