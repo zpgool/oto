@@ -468,3 +468,21 @@
   color: var(--accent);
   font-size: 12px;
 }
+
+/* =========================================
+   유튜브 플레이어 (소리만 쓰므로 화면 밖으로)
+========================================= */
+.yt-frame {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* 플레이어 바의 앨범 이미지 */
+.track-cover {
+  object-fit: cover;
+}

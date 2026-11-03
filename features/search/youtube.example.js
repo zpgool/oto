@@ -1,6 +1,6 @@
-// js/youtube.example.js
-// 이 파일을 js/youtube.js 로 복사한 뒤, 본인 API 키를 넣어서 쓴다.
-// (js/youtube.js 는 키가 들어가므로 .gitignore 로 깃에서 제외됨)
+// features/search/youtube.example.js
+// 이 파일을 features/search/youtube.js 로 복사한 뒤, 본인 API 키를 넣어서 쓴다.
+// (features/search/youtube.js 는 키가 들어가므로 .gitignore 로 깃에서 제외됨)
 //
 // YouTube Data API v3 로 음악 영상을 검색한다.
 // 키는 Google Cloud Console → API 및 서비스 → 사용자 인증 정보에서 발급받는다.

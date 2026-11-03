@@ -1,4 +1,4 @@
-// js/recentSearch.js
+// features/search/recentSearch.js
 // 최근 검색어를 브라우저(localStorage)에 저장한다.
 // 이 브라우저에만 남고 다른 기기에서는 보이지 않는다.
 const STORAGE_KEY = 'oto.recentSearches'

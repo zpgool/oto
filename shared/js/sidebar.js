@@ -1,21 +1,22 @@
-// js/sidebar.js
-// partials/sidebar.html 을 읽어서 각 페이지의 <div id="sidebar"> 를 진짜 사이드바로 바꾼다.
-// 페이지마다 사이드바를 복사해 두지 않아도 되고, 고칠 때 partials/sidebar.html 하나만 고치면 된다.
+// shared/js/sidebar.js
+// shared/partials/sidebar.html 을 읽어서 각 페이지의 <div id="sidebar"> 를 진짜 사이드바로 바꾼다.
+// 페이지마다 사이드바를 복사해 두지 않아도 되고, 고칠 때 shared/partials/sidebar.html 하나만 고치면 된다.
 import { getSession, onAuthChange } from './auth.js'
 
-const SIDEBAR_PATH = 'partials/sidebar.html'
+// 이 파일(shared/js/)을 기준으로 찾기 때문에 어느 페이지에서 불러도 경로가 맞는다.
+const SIDEBAR_PATH = new URL('../partials/sidebar.html', import.meta.url)
 
-// 지금 보고 있는 페이지의 파일 이름 (예: homeScreen.html)
-function currentPage() {
-  return location.pathname.split('/').pop() || 'homeScreen.html'
+// 경로에서 파일 이름만 꺼낸다. (../home/homeScreen.html -> homeScreen.html)
+function fileName(path) {
+  return path.split('/').pop()
 }
 
 // 지금 페이지에 해당하는 메뉴에 .active 를 붙인다.
 function markActiveLink(sidebar) {
-  const page = currentPage()
+  const page = fileName(location.pathname)
 
   sidebar.querySelectorAll('.nav-main a').forEach((link) => {
-    link.classList.toggle('active', link.getAttribute('href') === page)
+    link.classList.toggle('active', fileName(link.getAttribute('href')) === page)
   })
 }
 
