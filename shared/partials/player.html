@@ -2,7 +2,11 @@
 <footer class="player">
     <!-- 왼쪽: 지금 재생 중인 곡 -->
     <div class="player-track">
-        <img class="track-cover" id="track-cover" alt="">
+        <!-- 썸네일 위에 재생 중 표시(막대 3개)를 덮어 씌운다 -->
+        <span class="track-cover-wrap">
+            <img class="track-cover" id="track-cover" alt="">
+            <span class="eq" id="playing-eq" aria-hidden="true" hidden><i></i><i></i><i></i></span>
+        </span>
         <span class="track-info">
             <span class="track-title" id="track-title"></span>
             <span class="track-artist" id="track-artist"></span>

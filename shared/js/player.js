@@ -18,6 +18,22 @@ function formatTime(seconds) {
   return `${minutes}:${String(rest).padStart(2, '0')}`
 }
 
+// 막대의 지나간 부분 길이를 CSS 변수로 알려준다. (common.css 의 --fill)
+function setFill(input) {
+  const min = Number(input.min)
+  const max = Number(input.max)
+  const ratio = (Number(input.value) - min) / (max - min)
+
+  input.style.setProperty('--fill', `${ratio * 100}%`)
+}
+
+// 재생 중인지 아닌지를 화면에 반영한다.
+function setPlaying(isPlaying) {
+  ui.playButton.textContent = isPlaying ? '⏸' : '▶'
+  ui.player.classList.toggle('is-playing', isPlaying)
+  ui.eq.toggleAttribute('hidden', !isPlaying)
+}
+
 async function renderPlayerBar() {
   const placeholder = document.querySelector('#player')
   if (!placeholder) return false
@@ -32,6 +48,8 @@ async function renderPlayerBar() {
   placeholder.replaceWith(fragment)
 
   ui = {
+    player: document.querySelector('.player'),
+    eq: document.querySelector('#playing-eq'),
     cover: document.querySelector('#track-cover'),
     title: document.querySelector('#track-title'),
     artist: document.querySelector('#track-artist'),
@@ -98,6 +116,7 @@ function updateProgress() {
   if (!total) return
 
   ui.progressBar.value = String((current / total) * 100)
+  setFill(ui.progressBar)
   ui.timeCurrent.textContent = formatTime(current)
   ui.timeTotal.textContent = formatTime(total)
 }
@@ -105,7 +124,7 @@ function updateProgress() {
 function handleStateChange(event) {
   const { PLAYING, ENDED } = window.YT.PlayerState
 
-  ui.playButton.textContent = event.data === PLAYING ? '⏸' : '▶'
+  setPlaying(event.data === PLAYING)
 
   if (event.data === PLAYING) {
     startProgressTimer()
@@ -115,6 +134,7 @@ function handleStateChange(event) {
 
   if (event.data === ENDED) {
     ui.progressBar.value = '0'
+    setFill(ui.progressBar)
     ui.timeCurrent.textContent = '0:00'
   }
 }
@@ -139,6 +159,7 @@ function setupControls() {
 
     const seconds = (Number(ui.progressBar.value) / 100) * total
     ytPlayer.seekTo(seconds, true)
+    setFill(ui.progressBar)
     ui.timeCurrent.textContent = formatTime(seconds)
   })
 
@@ -147,6 +168,7 @@ function setupControls() {
     const volume = Number(ui.volumeBar.value)
 
     ytPlayer.setVolume(volume)
+    setFill(ui.volumeBar)
 
     // 0 으로 내리면 음소거와 같은 상태가 된다.
     if (volume === 0) {
@@ -164,10 +186,12 @@ function setupControls() {
       ytPlayer.unMute()
       ui.muteButton.textContent = '🔈'
       ui.volumeBar.value = String(ytPlayer.getVolume())
+      setFill(ui.volumeBar)
     } else {
       ytPlayer.mute()
       ui.muteButton.textContent = '🔇'
       ui.volumeBar.value = '0'
+      setFill(ui.volumeBar)
     }
   })
 }
@@ -179,6 +203,7 @@ const ready = (async () => {
 
   ytPlayer = await createPlayer(await loadIframeApi())
   ytPlayer.setVolume(Number(ui.volumeBar.value))
+  setFill(ui.volumeBar)
   setupControls()
 
   return ytPlayer
@@ -192,6 +217,10 @@ export async function playTrack(track) {
   ui.cover.src = track.thumbnail
   ui.title.textContent = track.title
   ui.artist.textContent = track.channel
+
+  ui.progressBar.value = '0'
+  setFill(ui.progressBar)
+  ui.timeCurrent.textContent = '0:00'
 
   ytPlayer.loadVideoById(track.videoId)
 }
