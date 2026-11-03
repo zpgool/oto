@@ -21,16 +21,13 @@
             <button type="button" aria-label="뒤로 가기">＜</button>
             <button type="button" aria-label="앞으로 가기">＞</button>
           </div>
-          <form class="search-form" role="search">
-            <input type="search" id="search-input" placeholder="노래 검색" />
-          </form>
         </header>
 
         <main class="content">
           <h1 class="page-title">검색</h1>
 
           <!-- 큰 검색 입력창 -->
-          <form class="search-big" role="search">
+          <form class="search-big" id="search-form" role="search">
             <span class="search-big-icon">🔍</span>
             <input
               type="search"
@@ -43,7 +40,7 @@
           </form>
 
           <!-- (초기 상태) 최근 검색어 -->
-          <section class="recent-box">
+          <section class="recent-box" id="recent-box">
             <div class="section-head">
               <h3 class="section-title">최근 검색어</h3>
               <button type="button" class="btn-clear-recent">모두 삭제</button>
@@ -71,9 +68,9 @@
           </section>
 
           <!-- (결과 상태) 검색 결과 테이블 -->
-          <section class="result-box" hidden>
-            <p class="result-summary"><strong>"new"</strong> 검색 결과 · 1곡</p>
-            <div class="track-table">
+          <section class="result-box" id="result-box" hidden>
+            <p class="result-summary" id="result-summary"></p>
+            <div class="track-table" id="result-table">
               <!-- 헤더 행 -->
               <div class="table-head">
                 <span class="col-num">#</span>
@@ -82,21 +79,6 @@
                 <span class="col-like">♡</span>
                 <span class="col-add">+</span>
                 <span class="col-time">🕘</span>
-              </div>
-              <!-- 결과 행 -->
-              <div class="table-row">
-                <span class="col-num"><span class="eq-icon">▮▮</span></span>
-                <span class="col-title">
-                  <span class="row-thumb"></span>
-                  <span class="row-info">
-                    <span class="row-name">Supernatural</span>
-                    <span class="row-artist">NewJeans</span>
-                  </span>
-                </span>
-                <span class="col-album">Supernatural</span>
-                <button class="col-like liked" aria-label="즐겨찾기">♥</button>
-                <button class="col-add" aria-label="추가">+</button>
-                <span class="col-time">3:26</span>
               </div>
             </div>
           </section>
@@ -151,5 +133,6 @@
 
     <!-- <script src="js/app.js" type="module"></script> -->
     <script type="module" src="js/sidebar.js"></script>
+    <script type="module" src="js/search.js"></script>
 </body>
 </html>
