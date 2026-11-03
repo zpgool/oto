@@ -1,4 +1,4 @@
-<!-- 모든 페이지가 같이 쓰는 사이드바. js/sidebar.js 가 각 페이지의 #sidebar 자리에 넣는다. -->
+<!-- 모든 페이지가 같이 쓰는 사이드바. shared/js/sidebar.js 가 각 페이지의 #sidebar 자리에 넣는다. -->
 <aside class="sidebar">
     <div class="logo">
         <span class="logo-mark"></span>
@@ -7,10 +7,10 @@
 
     <nav class="nav-main">
         <ul>
-            <li><a href="homeScreen.html">홈</a></li>
-            <li><a href="searchScreen.html">검색</a></li>
+            <li><a href="../home/homeScreen.html">홈</a></li>
+            <li><a href="../search/searchScreen.html">검색</a></li>
             <li><a href="#">즐겨찾기</a></li>
-            <li><a href="personalChartScreen.html">내 재생 차트</a></li>
+            <li><a href="../chart/personalChartScreen.html">내 재생 차트</a></li>
         </ul>
     </nav>
 
@@ -21,7 +21,7 @@
         </div>
         <ul id="playlist-list">
             <li>
-                <a href="playlistScreen.html">
+                <a href="../playlist/playlistScreen.html">
                     <span class="pl-thumb"></span>
                     <span class="pl-info">
                         <span class="pl-name">BrUnOm4rs</span>
@@ -32,7 +32,7 @@
         </ul>
     </div>
 
-    <!-- 이름/이메일은 js/sidebar.js 가 로그인한 사용자 정보로 채운다 -->
+    <!-- 이름/이메일은 shared/js/sidebar.js 가 로그인한 사용자 정보로 채운다 -->
     <div class="user-profile">
         <span class="user-avatar"></span>
         <span class="user-info">

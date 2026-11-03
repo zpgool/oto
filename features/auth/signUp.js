@@ -1,8 +1,8 @@
-// js/signUp.js
-import { signUp, getSession } from './auth.js'
-import { setupPasswordToggle } from './passwordToggle.js'
+// features/auth/signUp.js
+import { signUp, getSession } from '../../shared/js/auth.js'
+import { setupPasswordToggle } from '../../shared/js/passwordToggle.js'
 
-const HOME_PAGE = 'homeScreen.html'
+const HOME_PAGE = '../home/homeScreen.html'
 
 // ---- DOM ----
 const signupForm = document.querySelector('#signup-form')

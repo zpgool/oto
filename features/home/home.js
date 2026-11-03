@@ -1,7 +1,7 @@
-// js/home.js
-import { signOut, getSession, onAuthChange } from './auth.js'
+// features/home/home.js
+import { signOut, getSession, onAuthChange } from '../../shared/js/auth.js'
 
-const SIGNIN_PAGE = 'signIn.html'
+const SIGNIN_PAGE = '../auth/signIn.html'
 
 // ---- DOM ----
 const homeView = document.querySelector('#home-view')

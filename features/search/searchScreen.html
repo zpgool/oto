@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Oto.</title>
-   <link rel="stylesheet" href="css/common.css" />
-    <link rel="stylesheet" href="css/serchScreen.css" />
-    <link rel="stylesheet" href="css/reset.css" />
-  </head>
+    <link rel="stylesheet" href="../../shared/css/reset.css" />
+    <link rel="stylesheet" href="../../shared/css/common.css" />
+    <link rel="stylesheet" href="searchScreen.css" />
+</head>
   <body>
     <div class="app">
       <!-- ****** 사이드 바 ****** -->
-      <!-- 사이드바: partials/sidebar.html 을 js/sidebar.js 가 여기에 넣는다 -->
+      <!-- 사이드바: shared/partials/sidebar.html 을 shared/js/sidebar.js 가 여기에 넣는다 -->
       <div id="sidebar"></div>
 
       <!-- ******* 홈 메인 ****** -->
@@ -46,7 +46,7 @@
               <h3 class="section-title">최근 검색어</h3>
               <button type="button" class="btn-clear-recent" id="clear-recent">모두 삭제</button>
             </div>
-            <!-- 최근 검색어 목록은 js/search.js 가 채운다 -->
+            <!-- 최근 검색어 목록은 search.js 가 채운다 -->
             <ul class="recent-list" id="recent-list"></ul>
           </section>
 
@@ -68,54 +68,13 @@
         </main>
       </div>
 
-      <!-- ****** 플레이어 바(하단) ****** -->
-      <footer class="player">
-        <div class="player-track">
-          <span class="track-cover"></span>
-          <span class="track-info">
-            <span class="track-title">Supernatural</span>
-            <span class="track-artist">NewJeans</span>
-          </span>
-          <button type="button" class="btn-like" aria-label="즐겨찾기">
-            ♥
-          </button>
-        </div>
-
-        <div class="player-controls">
-          <div class="control-buttons">
-            <button type="button" aria-label="셔플">⇄</button>
-            <button type="button" aria-label="이전 곡">◀</button>
-            <button type="button" class="btn-play" aria-label="재생/일시정지">
-              ⏸
-            </button>
-            <button type="button" aria-label="다음 곡">▶</button>
-            <button type="button" aria-label="반복">⟳</button>
-          </div>
-          <div class="progress">
-            <span class="time-current">1:26</span>
-            <input
-              type="range"
-              class="progress-bar"
-              min="0"
-              max="100"
-              value="30"
-            />
-            <span class="time-total">-3:26</span>
-          </div>
-        </div>
-
-        <div class="player-extra">
-          <button type="button" aria-label="재생 목록">☰</button>
-          <button type="button" aria-label="음소거">🔈</button>
-          <input type="range" class="volume-bar" min="0" max="100" value="70" />
-        </div>
-      </footer>
     </div>
 
-    <div id="yt-player" style="display: none"></div>
+    <!-- 플레이어 바: shared/partials/player.html 을 shared/js/player.js 가 여기에 넣는다 -->
+    <div id="player"></div>
 
-    <!-- <script src="js/app.js" type="module"></script> -->
-    <script type="module" src="js/sidebar.js"></script>
-    <script type="module" src="js/search.js"></script>
+    <script type="module" src="../../shared/js/sidebar.js"></script>
+    <script type="module" src="../../shared/js/player.js"></script>
+    <script type="module" src="search.js"></script>
 </body>
 </html>

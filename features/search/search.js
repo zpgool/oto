@@ -1,7 +1,8 @@
-// js/search.js
+// features/search/search.js
 // 검색창에 입력하고 엔터를 누르면 YouTube 에서 음악을 검색해 결과 표에 보여준다.
 // 검색한 말은 최근 검색어로 저장해서 다시 누르면 바로 검색된다.
 import { searchMusic } from './youtube.js'
+import { playTrack } from '../../shared/js/player.js'
 import {
   getRecentSearches,
   addRecentSearch,
@@ -93,6 +94,12 @@ function createRow(video, index) {
   const row = document.createElement('div')
   row.className = 'table-row'
   row.dataset.videoId = video.videoId
+
+  // 행을 누르면 재생한다. (♡, + 버튼은 각자 동작하므로 제외)
+  row.addEventListener('click', (event) => {
+    if (event.target.closest('button')) return
+    playTrack(video)
+  })
 
   const title = createCell('col-title')
 

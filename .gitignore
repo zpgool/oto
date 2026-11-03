@@ -1,2 +1,2 @@
-js/supabase.js
-js/youtube.js
+shared/js/supabase.js
+features/search/youtube.js
