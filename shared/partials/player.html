@@ -1,5 +1,6 @@
 <!-- 모든 페이지가 같이 쓰는 하단 플레이어 바. shared/js/player.js 가 각 페이지의 #player 자리에 넣는다. -->
-<footer class="player">
+<!-- is-empty: 아직 아무 곡도 걸지 않은 상태. 첫 곡을 재생하면 player.js 가 떼어낸다. -->
+<footer class="player is-empty">
     <!-- 왼쪽: 지금 재생 중인 곡 -->
     <div class="player-track">
         <!-- 썸네일 위에 재생 중 표시(막대 3개)를 덮어 씌운다 -->
@@ -11,22 +12,22 @@
             <span class="track-title" id="track-title"></span>
             <span class="track-artist" id="track-artist"></span>
         </span>
-        <button type="button" class="btn-like" aria-label="즐겨찾기">♥</button>
+        <button type="button" class="btn-like" aria-label="즐겨찾기" disabled>♥</button>
     </div>
 
     <!-- 가운데: 재생 조작 + 진행바 -->
     <div class="player-controls">
         <div class="control-buttons">
             <!-- 셔플/이전/다음/반복은 아직 기능 없음 -->
-            <button type="button" aria-label="셔플">⇄</button>
-            <button type="button" aria-label="이전 곡">◀</button>
-            <button type="button" class="btn-play" id="btn-play" aria-label="재생/일시정지">▶</button>
-            <button type="button" aria-label="다음 곡">▶</button>
-            <button type="button" aria-label="반복">⟳</button>
+            <button type="button" aria-label="셔플" disabled>⇄</button>
+            <button type="button" aria-label="이전 곡" disabled>◀</button>
+            <button type="button" class="btn-play" id="btn-play" aria-label="재생/일시정지" disabled>▶</button>
+            <button type="button" aria-label="다음 곡" disabled>▶</button>
+            <button type="button" aria-label="반복" disabled>⟳</button>
         </div>
         <div class="progress">
             <span class="time-current" id="time-current">0:00</span>
-            <input type="range" class="progress-bar" id="progress-bar" min="0" max="100" value="0" aria-label="재생 위치">
+            <input type="range" class="progress-bar" id="progress-bar" min="0" max="100" value="0" aria-label="재생 위치" disabled>
             <span class="time-total" id="time-total">0:00</span>
         </div>
     </div>

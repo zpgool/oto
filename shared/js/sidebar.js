@@ -6,17 +6,13 @@ import { getSession, onAuthChange } from './auth.js'
 // 이 파일(shared/js/)을 기준으로 찾기 때문에 어느 페이지에서 불러도 경로가 맞는다.
 const SIDEBAR_PATH = new URL('../partials/sidebar.html', import.meta.url)
 
-// 경로에서 파일 이름만 꺼낸다. (../home/homeScreen.html -> homeScreen.html)
-function fileName(path) {
-  return path.split('/').pop()
-}
+// 지금 보고 있는 화면의 메뉴에 .active 를 붙인다.
+// 주소가 바뀔 때마다 router 가 다시 불러준다.
+export function markActiveSidebar() {
+  const current = location.hash || '#/home'
 
-// 지금 페이지에 해당하는 메뉴에 .active 를 붙인다.
-function markActiveLink(sidebar) {
-  const page = fileName(location.pathname)
-
-  sidebar.querySelectorAll('.nav-main a').forEach((link) => {
-    link.classList.toggle('active', fileName(link.getAttribute('href')) === page)
+  document.querySelectorAll('.nav-main a, .nav-playlist a').forEach((link) => {
+    link.classList.toggle('active', link.getAttribute('href') === current)
   })
 }
 
@@ -60,11 +56,11 @@ export async function renderSidebar() {
   const sidebar = document.createRange().createContextualFragment(html).querySelector('.sidebar')
   if (!sidebar) return
 
-  markActiveLink(sidebar)
-
   // 자리표시용 div 를 통째로 바꾼다.
   // div 를 남겨두면 .app 그리드의 칸을 div 가 차지해서 레이아웃이 틀어진다.
   placeholder.replaceWith(sidebar)
+
+  markActiveSidebar()
 
   // 사이드바를 넣은 뒤에 사용자 정보를 채운다.
   renderUser(await getSession())

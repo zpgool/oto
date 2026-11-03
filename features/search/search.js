@@ -11,14 +11,15 @@ import {
 } from './recentSearch.js'
 
 // ---- DOM ----
-const searchForm = document.querySelector('#search-form')
-const searchInput = document.querySelector('#search-input')
-const recentBox = document.querySelector('#recent-box')
-const recentList = document.querySelector('#recent-list')
-const clearRecentButton = document.querySelector('#clear-recent')
-const resultBox = document.querySelector('#result-box')
-const resultSummary = document.querySelector('#result-summary')
-const resultTable = document.querySelector('#result-table')
+// 검색 화면에 들어올 때마다 HTML 이 새로 만들어지므로, init() 에서 다시 찾아 담는다.
+let searchForm
+let searchInput
+let recentBox
+let recentList
+let clearRecentButton
+let resultBox
+let resultSummary
+let resultTable
 
 // ---- 최근 검색어 ----
 // 검색어 하나를 둥근 칩 모양 <li> 로 만든다.
@@ -58,11 +59,6 @@ function renderRecentSearches() {
   // 저장된 검색어가 없으면 영역 자체를 숨긴다.
   recentBox.hidden = queries.length === 0
 }
-
-clearRecentButton.addEventListener('click', () => {
-  clearRecentSearches()
-  renderRecentSearches()
-})
 
 // ---- 검색 결과 ----
 // 검색 결과를 보여줄 때는 최근 검색어 영역을 숨긴다.
@@ -160,21 +156,38 @@ async function runSearch(query) {
   }
 }
 
-searchForm.addEventListener('submit', (event) => {
-  event.preventDefault()
+// ---- 시작 ----
+// router 가 검색 화면을 #view 에 넣은 뒤에 불러준다.
+export function init() {
+  searchForm = document.querySelector('#search-form')
+  searchInput = document.querySelector('#search-input')
+  recentBox = document.querySelector('#recent-box')
+  recentList = document.querySelector('#recent-list')
+  clearRecentButton = document.querySelector('#clear-recent')
+  resultBox = document.querySelector('#result-box')
+  resultSummary = document.querySelector('#result-summary')
+  resultTable = document.querySelector('#result-table')
 
-  const query = searchInput.value.trim()
-  if (!query) return
+  searchForm.addEventListener('submit', (event) => {
+    event.preventDefault()
 
-  runSearch(query)
-})
+    const query = searchInput.value.trim()
+    if (!query) return
 
-// 검색창을 비우거나 X 를 누르면 최근 검색어 화면으로 돌아온다.
-searchInput.addEventListener('search', () => {
-  if (!searchInput.value.trim()) {
-    showResults(false)
-  }
-})
+    runSearch(query)
+  })
 
-// ---- 첫 화면 ----
-renderRecentSearches()
+  // 검색창을 비우거나 X 를 누르면 최근 검색어 화면으로 돌아온다.
+  searchInput.addEventListener('search', () => {
+    if (!searchInput.value.trim()) {
+      showResults(false)
+    }
+  })
+
+  clearRecentButton.addEventListener('click', () => {
+    clearRecentSearches()
+    renderRecentSearches()
+  })
+
+  renderRecentSearches()
+}
