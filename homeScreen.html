@@ -22,19 +22,10 @@
                     <button type="button" aria-label="뒤로 가기">＜</button>
                     <button type="button" aria-label="앞으로 가기">＞</button>
                 </div>
-                <form class="search-form" id="search-form" role="search">
-                    <input type="search" id="search-input" placeholder="노래 검색" autocomplete="off">
-                </form>
                 <button id="logout-button">로그아웃</button>
             </header>
 
             <main class="content">
-                <!-- 검색 결과 (검색했을 때만 보인다) -->
-                <section class="search-results" id="search-results" hidden>
-                    <h3 class="section-title" id="search-result-title"></h3>
-                    <ul class="track-list" id="search-result-list"></ul>
-                </section>
-
                 <section class="greeting">
                     <p class="greeting-sub">안녕하세요</p>
                     <h2 class="greeting-name">Jungwon.</h2>
@@ -120,7 +111,6 @@
 
     <!-- <script src="js/app.js" type="module"></script> -->
     <script type="module" src="js/home.js"></script>
-    <script type="module" src="js/search.js"></script>
   <script type="module" src="js/sidebar.js"></script>
 </body>
 </html>
