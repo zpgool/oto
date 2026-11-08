@@ -3,6 +3,7 @@
 import { getPlaylist, removeTrack, reorderTracks } from './playlistStore.js'
 import { openPlaylistSettingsModal } from './playlistModal.js'
 import { playTrack } from '../../shared/js/player.js'
+import { attachHeart } from '../favorite/favoriteHeart.js'
 import { showToast } from '../../shared/js/toast.js'
 
 let playlistId = null
@@ -53,11 +54,11 @@ function createRow(track, index) {
   info.append(createCell('row-name', track.title), createCell('row-artist', track.channel))
   title.append(thumb, info)
 
+  // 하트: 누르면 즐겨찾기에 넣고 뺀다. 모양·알림은 attachHeart 가 맡는다.
   const like = document.createElement('button')
   like.className = 'col-like'
   like.type = 'button'
-  like.setAttribute('aria-label', '즐겨찾기')
-  like.textContent = '♡'
+  attachHeart(like, () => track)
 
   const remove = document.createElement('button')
   remove.className = 'col-del'

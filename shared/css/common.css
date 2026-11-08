@@ -302,10 +302,18 @@
   font-size: 12px;
   color: var(--text-muted);
 }
+/* 플레이어 바 하트. 목록의 .col-like 와 같은 규칙으로 — 즐겨찾기한 곡만 색이 든다.
+   (.player button:disabled 가 더 강해서, 곡을 걸기 전에는 회색 그대로다) */
 .btn-like {
-  color: var(--accent);
+  color: var(--text-muted);
   font-size: 16px;
   margin-left: 4px;
+}
+.btn-like.liked {
+  color: var(--accent);
+}
+.btn-like:hover:not(:disabled) {
+  color: var(--accent);
 }
 .player-controls {
   display: flex;
