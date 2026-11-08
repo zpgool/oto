@@ -100,6 +100,16 @@
 #playlist-list a:hover {
   background: var(--bg-hover);
 }
+/* 지금 보고 있는 플레이리스트.
+   선택자가 #playlist-list a 보다 약하면 배경이 안 먹어서 id 를 그대로 붙였다. */
+#playlist-list a.active {
+  background: var(--bg-card);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+#playlist-list a.active .pl-name {
+  font-weight: 600;
+  color: var(--accent);
+}
 .pl-thumb {
   width: 34px;
   height: 34px;
