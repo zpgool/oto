@@ -82,3 +82,30 @@
 .chart-rest .table-row {
   grid-template-columns: 48px 1fr 220px 80px 56px 40px;
 }
+
+/* 시상대 표지에 곡 썸네일 깔기 */
+.podium-cover {
+  background-size: cover;
+  background-position: center;
+}
+
+/* 들은 곡이 없을 때 */
+.chart-empty {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 8px 0;
+}
+
+/* 곡이 세 개가 안 될 때 자리만 차지하는 빈 칸.
+   display: none 으로 지우면 남은 칸이 가운데로 몰려서 1위 자리가 흔들린다. */
+.podium-empty {
+  visibility: hidden;
+}
+
+/* 차트는 보기만 하는 화면이라 눌러도 재생되지 않는다 */
+.chart-rest .table-row {
+  cursor: default;
+}
+.chart-rest .table-row:hover {
+  background: none;
+}

@@ -3,31 +3,14 @@
      그래서 이 파일을 브라우저로 직접 열면 디자인 없이 글자만 보인다. -->
 <section class="greeting">
     <p class="greeting-sub">안녕하세요</p>
-    <h2 class="greeting-name">Jungwon.</h2>
+    <!-- 이름은 features/home/home.js 가 채운다 -->
+    <h2 class="greeting-name" id="greeting-name"></h2>
 </section>
 
 <section class="shortcuts">
     <h3 class="section-title">바로 가기</h3>
-    <ul class="shortcut-grid">
-        <li class="shortcut-card">
-            <a href="#">
-                <span class="shortcut-thumb favorite"></span>
-                <span class="shortcut-info">
-                    <span class="shortcut-name">즐겨찾기</span>
-                    <span class="shortcut-count">6곡</span>
-                </span>
-            </a>
-        </li>
-        <li class="shortcut-card">
-            <a href="#">
-                <span class="shortcut-thumb"></span>
-                <span class="shortcut-info">
-                    <span class="shortcut-name">BrUnOm4rs</span>
-                    <span class="shortcut-count">12곡</span>
-                </span>
-            </a>
-        </li>
-    </ul>
+    <!-- 카드는 features/home/home.js 가 채운다 -->
+    <ul class="shortcut-grid" id="shortcut-grid"></ul>
 </section>
 
 <section class="playlists">
@@ -35,13 +18,9 @@
         <h3 class="section-title">플레이리스트</h3>
         <button type="button" class="btn-new-playlist">＋ 새 플레이리스트</button>
     </div>
-    <ul class="playlist-grid" id="playlist-grid">
-        <li class="playlist-card">
-            <a href="#">
-                <span class="card-cover"></span>
-                <span class="card-title">BrUnOm4rs</span>
-                <span class="card-desc">12곡 · 37m</span>
-            </a>
-        </li>
-    </ul>
+    <!-- 목록은 features/home/home.js 가 Supabase 에서 받아와 채운다 -->
+    <ul class="playlist-grid" id="playlist-grid"></ul>
+    <p class="playlist-empty" id="playlist-empty" hidden>
+        아직 플레이리스트가 없어요. ＋ 새 플레이리스트로 만들어보세요.
+    </p>
 </section>

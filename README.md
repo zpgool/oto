@@ -32,15 +32,16 @@ features/               기능 단위로 html + css + js 를 함께 둔다
              recentSearch.js(최근 검색어), youtube.js(API 키)
   playlist/  playlistScreen.html, playlistScreen.css, playlist.js,
              playlistStore.js(Supabase 읽고 쓰기), playlistModal.js(팝업)
-  chart/     personalChartScreen.html, personalChartScreen.css
+  chart/     personalChartScreen.html, personalChartScreen.css, chart.js,
+             chartStore.js(재생 기록 + 차트)
 shared/                 여러 화면이 같이 쓰는 것
   css/       reset.css, common.css, modal.css, toast.css
   js/        supabase.js(접속 정보), auth.js(로그인 함수),
              app.js(로그인 확인 + 상단 버튼), router.js(화면 전환),
              sidebar.js, player.js(음악 재생), toast.js(알림),
-             passwordToggle.js
+             songStore.js(songs 표), passwordToggle.js
   partials/  sidebar.html, player.html (한 벌만 두고 같이 쓴다)
-db/        youtube_songs.sql (기존 Supabase 표에 모자란 것만 더하는 SQL)
+db/        youtube_songs.sql, play_chart.sql (Supabase 에서 한 번씩 실행)
 img/
 ```
 
@@ -68,6 +69,13 @@ Supabase 에 이미 있는 표 세 개를 쓴다.
 
 무언가를 담고 바꾸고 지우면 화면 위쪽에 알림이 잠깐 뜬다. (`shared/js/toast.js`)
 
+## 재생 차트
+
+곡을 틀 때마다 `play_events` 에 한 줄씩 쌓고, 지난 30일치를 곡별로 세서 보여준다.
+세는 일은 `my_play_chart` 함수가 데이터베이스 안에서 한다.
+
+이미 있는 `play_counts` 는 쓰지 않는다. 누적 횟수만 들고 있어서 기간을 잘라 셀 수 없다.
+
 남의 플레이리스트가 보이지 않는 건 Supabase 의 보안 규칙(RLS) 덕분이다.
 anon key 는 공개되는 값이라 이 규칙이 유일한 울타리다. 끄면 안 된다.
 
@@ -89,9 +97,10 @@ anon key 는 공개되는 값이라 이 규칙이 유일한 울타리다. 끄면
 - `shared/js/supabase.js` — Supabase URL 과 anon key
 - `features/search/youtube.js` — `features/search/youtube.example.js` 를 복사해서 YouTube API 키 입력
 
-표는 이미 만들어져 있다. 모자란 것(songs 의 youtube_id 칸, 곡 추가 권한)만
-한 번 더해주면 된다. Supabase 대시보드 > SQL Editor 에 `db/youtube_songs.sql` 을
-붙여넣고 실행한다.
+Supabase 대시보드 > SQL Editor 에서 `db/` 안의 SQL 을 한 번씩 실행한다.
+
+- `youtube_songs.sql` — songs 에 youtube_id 칸과 곡 추가 권한을 더한다
+- `play_chart.sql` — 재생 기록 표와 차트 함수를 만든다
 
 Live Server 등 로컬 서버로 열어야 한다. 파일을 직접 열면(file://) 사이드바와 화면을
 불러오지 못한다.

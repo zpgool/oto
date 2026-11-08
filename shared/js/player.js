@@ -1,6 +1,9 @@
 // shared/js/player.js
 // 하단 플레이어 바를 모든 페이지에 넣고, 유튜브 IFrame API 로 소리만 재생한다.
 // 쓰는 쪽에서는 playTrack({ videoId, title, channel, thumbnail }) 만 부르면 된다.
+import { recordPlay } from '../../features/chart/chartStore.js'
+import { attachHeart } from '../../features/favorite/favoriteHeart.js'
+
 const PLAYER_PATH = new URL('../partials/player.html', import.meta.url)
 const IFRAME_API_SRC = 'https://www.youtube.com/iframe_api'
 
@@ -12,6 +15,9 @@ let ui = {}
 let ytPlayer = null
 let progressTimer = null
 let currentTrack = null
+
+// 곡이 바뀌면 하트를 다시 칠하라고 부르는 함수. attachHeart 가 돌려준다.
+let refreshHeart = null
 
 // ---- 화면 ----
 // 초 단위를 0:00 모양으로 바꾼다.
@@ -69,6 +75,7 @@ async function renderPlayerBar() {
     title: document.querySelector('#track-title'),
     artist: document.querySelector('#track-artist'),
     playButton: document.querySelector('#btn-play'),
+    likeButton: document.querySelector('#btn-like'),
     muteButton: document.querySelector('#btn-mute'),
     progressBar: document.querySelector('#progress-bar'),
     volumeBar: document.querySelector('#volume-bar'),
@@ -191,6 +198,10 @@ function handleStateChange(event) {
 
 // ---- 조작 버튼 ----
 function setupControls() {
+  // 하트: 지금 걸려 있는 곡을 즐겨찾기에 넣고 뺀다.
+  // 목록 화면의 하트와 같은 함수를 써서, 한쪽에서 켜면 다른 쪽도 따라 바뀐다.
+  refreshHeart = attachHeart(ui.likeButton, () => currentTrack)
+
   // 재생 / 일시정지
   ui.playButton.addEventListener('click', () => {
     const { PLAYING } = window.YT.PlayerState
@@ -295,6 +306,9 @@ function showTrack(track) {
   ui.progressBar.value = '0'
   setFill(ui.progressBar)
   ui.timeCurrent.textContent = '0:00'
+
+  // 새로 건 곡이 이미 즐겨찾기인지에 맞춰 하트를 다시 칠한다.
+  refreshHeart?.()
 }
 
 // ---- 바깥에서 쓰는 함수 ----
@@ -304,4 +318,7 @@ export async function playTrack(track) {
 
   showTrack(track)
   ytPlayer.loadVideoById(track.videoId)
+
+  // 재생 차트에 쓸 기록. 기다리지 않는다. 실패해도 재생에는 지장이 없다.
+  recordPlay(track)
 }

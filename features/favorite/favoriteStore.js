@@ -8,9 +8,9 @@
 //
 // 곡 정보 자체는 songs 에 있고, favorites 는 song_id 로 그 곡을 가리키기만 한다.
 // 그래서 즐겨찾기를 넣으려면 "먼저 songs 에 곡이 있어야" 한다. 그 일은 플레이리스트와
-// 똑같아서, playlistStore 의 ensureSong 을 가져다 쓴다. (곡 넣는 코드가 두 벌이 되지 않게)
+// 똑같아서, songStore 의 ensureSong 을 가져다 쓴다. (곡 넣는 코드가 두 벌이 되지 않게)
 import { supabase } from '../../shared/js/supabase.js'
-import { ensureSong } from '../playlist/playlistStore.js'
+import { failIf, toTrack, ensureSong } from '../../shared/js/songStore.js'
 
 // 즐겨찾기가 바뀌면 알린다. 목록을 들고 있는 다른 화면이 이 신호를 듣고 다시 그릴 수 있다.
 // (playlistStore 의 onPlaylistsChanged 와 같은 방식)
@@ -20,27 +20,43 @@ export function onFavoritesChanged(callback) {
   document.addEventListener(CHANGED_EVENT, callback)
 }
 
+// 화면에서 사라진 하트가 계속 신호를 받지 않도록 끊는다.
+export function offFavoritesChanged(callback) {
+  document.removeEventListener(CHANGED_EVENT, callback)
+}
+
 function notifyChanged() {
   document.dispatchEvent(new CustomEvent(CHANGED_EVENT))
 }
 
-// Supabase 가 돌려주는 오류를 그대로 던진다. 부르는 쪽에서 사용자에게 보여준다.
-// (playlistStore 와 같은 이름·같은 방식으로 맞췄다)
-function failIf(error) {
-  if (error) throw new Error(error.message)
+// ---- 즐겨찾기한 곡 번호 모음 (캐시) ----
+// 하트가 달린 행이 30개면 행마다 물어볼 수 없으니, 한 번 받아서 들고 있는다.
+// 넣고 뺄 때마다 여기도 같이 고쳐서 다시 받아오지 않는다.
+let cachedIds = null
+
+// 같은 순간에 여러 하트가 동시에 물어봐도 요청은 한 번만 나가게 묶어 둔다.
+let loadingIds = null
+
+export async function loadFavoriteIds() {
+  if (cachedIds) return cachedIds
+
+  if (!loadingIds) {
+    loadingIds = listFavoriteVideoIds()
+      .then((ids) => {
+        cachedIds = ids
+        return ids
+      })
+      .finally(() => {
+        loadingIds = null
+      })
+  }
+
+  return loadingIds
 }
 
-// songs 한 줄을 화면에서 쓰는 모양으로 바꾼다.
-// 플레이어와 검색 결과가 쓰는 이름(videoId, channel, thumbnail)에 맞춘다.
-// 이렇게 통일해 두면 여기서 돌려준 track 을 playTrack 에 그대로 넘길 수 있다.
-function toTrack(song) {
-  return {
-    songId: song.id,
-    videoId: song.youtube_id,
-    title: song.title,
-    channel: song.artist,
-    thumbnail: song.album_art_url,
-  }
+// 이미 받아둔 목록으로 바로 답한다. loadFavoriteIds() 를 먼저 불러야 한다.
+export function isFavorite(videoId) {
+  return cachedIds?.has(videoId) ?? false
 }
 
 // ---- 읽기 ----
@@ -95,6 +111,7 @@ export async function addFavorite(track) {
   // 빠르게 두 번 눌렀거나 다른 탭에서 먼저 넣은 경우라, 오류로 보지 않고 넘어간다.
   if (error && error.code !== '23505') failIf(error)
 
+  cachedIds?.add(track.videoId)
   notifyChanged()
 }
 
@@ -110,7 +127,10 @@ export async function removeFavorite(videoId) {
   failIf(findError)
 
   // songs 에 아예 없는 곡이면 즐겨찾기에도 있을 수 없으니 그냥 끝낸다.
-  if (!song) return
+  if (!song) {
+    cachedIds?.delete(videoId)
+    return
+  }
 
   // 찾은 번호로 내 즐겨찾기에서 지운다. (RLS 가 내 행만 지우도록 막아준다)
   const { error } = await supabase
@@ -119,6 +139,8 @@ export async function removeFavorite(videoId) {
     .eq('song_id', song.id)
 
   failIf(error)
+
+  cachedIds?.delete(videoId)
   notifyChanged()
 }
 

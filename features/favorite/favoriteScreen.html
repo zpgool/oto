@@ -7,17 +7,13 @@
   <div class="fav-meta">
     <span class="fav-label">즐겨찾기</span>
     <h1 class="fav-title">좋아요 표시한 곡</h1>
-    <span class="fav-sub">Jungwon · 6곡</span>
+    <!-- 곡 수는 favorite.js 가 채운다 -->
+    <span class="fav-sub" id="fav-sub"></span>
   </div>
 </section>
 
-<!-- 액션 버튼 -->
-<div class="fav-actions">
-  <button type="button" class="btn-play-circle" aria-label="재생">▶</button>
-</div>
-
 <!-- 곡 목록 -->
-<div class="track-table" id="fav-table">
+<div class="track-table" id="fav-table" hidden>
   <div class="table-head">
     <span class="col-title">제목</span>
     <span class="col-album">앨범</span>
