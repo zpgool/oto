@@ -81,7 +81,7 @@ export async function createPlaylist(name) {
 export async function getPlaylist(playlistId) {
   const { data, error } = await supabase
     .from('playlists')
-    .select('id, name, playlist_songs(position, songs(id, title, artist, album_art_url, youtube_id))')
+    .select('id, name, playlist_songs(id, position, songs(id, title, artist, album_art_url, youtube_id))')
     .eq('id', playlistId)
     .maybeSingle()
 
@@ -91,9 +91,34 @@ export async function getPlaylist(playlistId) {
   const tracks = data.playlist_songs
     .filter((row) => row.songs)
     .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-    .map((row) => toTrack(row.songs))
+    // rowId 는 playlist_songs 의 행 번호. 순서를 바꿀 때 이 번호로 찾아 고친다.
+    // position 은 지금 순번. 바뀐 행만 골라내는 데 쓴다.
+    .map((row) => ({ ...toTrack(row.songs), rowId: row.id, position: row.position }))
 
   return { id: data.id, name: data.name, tracks }
+}
+
+export async function renamePlaylist(playlistId, name) {
+  const { data, error } = await supabase
+    .from('playlists')
+    .update({ name: name.trim() })
+    .eq('id', playlistId)
+    .select('id, name')
+    .single()
+
+  failIf(error)
+  notifyChanged()
+
+  return data
+}
+
+// 플레이리스트를 지운다. 담긴 곡 연결도 표 설정(on delete cascade)에 따라 같이 지워진다.
+// songs 자체는 남는다. 다른 사람의 플레이리스트가 같은 곡을 쓰고 있을 수 있어서다.
+export async function deletePlaylist(playlistId) {
+  const { error } = await supabase.from('playlists').delete().eq('id', playlistId)
+
+  failIf(error)
+  notifyChanged()
 }
 
 // ---- 곡 ----
@@ -188,6 +213,34 @@ export async function addTrack(playlistId, track) {
 
   failIf(error)
   notifyChanged()
+}
+
+// 바뀐 순서대로 position 을 1 부터 다시 매긴다.
+//
+// upsert 로 한 번에 보내면 'cannot insert a non-DEFAULT value into column id' 가 난다.
+// playlist_songs.id 는 데이터베이스가 알아서 매기는 칸(generated always as identity)이라
+// 값을 직접 넣을 수 없는데, upsert 는 속으로 insert 를 하면서 id 를 같이 보내기 때문이다.
+// 그래서 행마다 update 를 보낸다. 자리가 실제로 바뀐 행만 고른다.
+export async function reorderTracks(playlistId, tracks) {
+  const changed = tracks
+    .map((track, index) => ({ track, position: index + 1 }))
+    .filter(({ track, position }) => track.position !== position)
+
+  if (changed.length === 0) return
+
+  const results = await Promise.all(
+    changed.map(({ track, position }) =>
+      supabase.from('playlist_songs').update({ position }).eq('id', track.rowId),
+    ),
+  )
+
+  failIf(results.find((result) => result.error)?.error)
+
+  // 저장된 순번을 들고 있는 곡 정보에도 반영한다.
+  // 안 그러면 다음에 또 옮길 때 바뀐 행을 제대로 못 가려낸다.
+  changed.forEach(({ track, position }) => {
+    track.position = position
+  })
 }
 
 export async function removeTrack(playlistId, songId) {

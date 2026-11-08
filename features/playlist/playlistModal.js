@@ -3,7 +3,15 @@
 //   - openCreatePlaylistModal()       이름을 받아 새 플레이리스트를 만든다
 //   - openAddToPlaylistModal(track)   어느 플레이리스트에 담을지 고른다
 // <dialog> 를 쓰기 때문에 Esc 로 닫기와 뒤 배경 어둡게가 브라우저 기본으로 된다.
-import { listPlaylists, createPlaylist, addTrack, findPlaylistsWithTrack } from './playlistStore.js'
+import {
+  listPlaylists,
+  createPlaylist,
+  addTrack,
+  findPlaylistsWithTrack,
+  renamePlaylist,
+  deletePlaylist,
+} from './playlistStore.js'
+import { showToast } from '../../shared/js/toast.js'
 
 // ---- 팝업 껍데기 ----
 // 제목과 닫기 버튼이 달린 빈 팝업을 띄우고, 내용을 채울 자리를 돌려준다.
@@ -107,6 +115,7 @@ export function openCreatePlaylistModal() {
       try {
         created = await createPlaylist(name)
         dialog.close()
+        showToast(`'${created.name}' 플레이리스트를 만들었습니다`)
       } catch (failure) {
         error.textContent = `만들지 못했습니다: ${failure.message}`
         error.hidden = false
@@ -153,13 +162,14 @@ export async function openAddToPlaylistModal(track) {
   error.hidden = true
 
   // 곡을 담고 팝업을 닫는다.
-  async function addAndClose(playlistId, button) {
+  async function addAndClose(playlist, button) {
     button.disabled = true
     error.hidden = true
 
     try {
-      await addTrack(playlistId, track)
+      await addTrack(playlist.id, track)
       dialog.close()
+      showToast(`'${playlist.name}' 에 추가되었습니다`)
     } catch (failure) {
       error.textContent = failure.message
       error.hidden = false
@@ -185,7 +195,7 @@ export async function openAddToPlaylistModal(track) {
       item.disabled = true
     } else {
       note.textContent = `${playlist.trackCount}곡`
-      item.addEventListener('click', () => addAndClose(playlist.id, item))
+      item.addEventListener('click', () => addAndClose(playlist, item))
     }
 
     item.append(name, note)
@@ -214,10 +224,126 @@ export async function openAddToPlaylistModal(track) {
 
     try {
       await addTrack(playlist.id, track)
+      showToast(`'${playlist.name}' 에 추가되었습니다`)
     } catch (failure) {
       alert(`담지 못했습니다: ${failure.message}`)
     }
   })
 
   body.append(newButton, error)
+}
+
+// ---- 플레이리스트 설정 (이름 변경 / 삭제) ----
+// 무엇을 했는지 돌려준다. { action: 'renamed', name } 또는 { action: 'deleted' }, 그냥 닫으면 null.
+export function openPlaylistSettingsModal(playlist) {
+  const { dialog, body } = openDialog('플레이리스트 설정')
+
+  return new Promise((resolve) => {
+    let result = null
+
+    // --- 이름 변경 ---
+    const form = document.createElement('form')
+    form.className = 'modal-form'
+
+    const input = document.createElement('input')
+    input.type = 'text'
+    input.className = 'modal-input'
+    input.value = playlist.name
+    input.maxLength = 60
+    input.required = true
+    input.autocomplete = 'off'
+    input.setAttribute('aria-label', '플레이리스트 이름')
+
+    const error = createMessage('modal-error', '')
+    error.hidden = true
+
+    const actions = document.createElement('div')
+    actions.className = 'modal-actions'
+
+    const saveButton = document.createElement('button')
+    saveButton.type = 'submit'
+    saveButton.className = 'modal-btn modal-btn-primary'
+    saveButton.textContent = '이름 저장'
+
+    actions.append(saveButton)
+    form.append(input, error, actions)
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault()
+
+      const name = input.value.trim()
+      if (!name || name === playlist.name) return
+
+      saveButton.disabled = true
+      saveButton.textContent = '저장 중...'
+      error.hidden = true
+
+      try {
+        const renamed = await renamePlaylist(playlist.id, name)
+        result = { action: 'renamed', name: renamed.name }
+        dialog.close()
+        showToast('이름을 바꿨습니다')
+      } catch (failure) {
+        error.textContent = `바꾸지 못했습니다: ${failure.message}`
+        error.hidden = false
+        saveButton.disabled = false
+        saveButton.textContent = '이름 저장'
+      }
+    })
+
+    // --- 삭제 ---
+    // 되돌릴 수 없는 일이라 한 번 더 묻는다.
+    const danger = document.createElement('div')
+    danger.className = 'modal-danger'
+
+    const deleteButton = document.createElement('button')
+    deleteButton.type = 'button'
+    deleteButton.className = 'modal-btn modal-btn-danger'
+    deleteButton.textContent = '플레이리스트 삭제'
+
+    deleteButton.addEventListener('click', () => {
+      const question = createMessage('modal-confirm', '정말 삭제할까요? 담긴 곡 목록도 같이 사라집니다.')
+
+      const confirmActions = document.createElement('div')
+      confirmActions.className = 'modal-actions'
+
+      const cancelButton = document.createElement('button')
+      cancelButton.type = 'button'
+      cancelButton.className = 'modal-btn'
+      cancelButton.textContent = '취소'
+      cancelButton.addEventListener('click', () => danger.replaceChildren(deleteButton))
+
+      const reallyButton = document.createElement('button')
+      reallyButton.type = 'button'
+      reallyButton.className = 'modal-btn modal-btn-danger'
+      reallyButton.textContent = '삭제'
+      reallyButton.addEventListener('click', async () => {
+        reallyButton.disabled = true
+        cancelButton.disabled = true
+        reallyButton.textContent = '삭제 중...'
+
+        try {
+          await deletePlaylist(playlist.id)
+          result = { action: 'deleted' }
+          dialog.close()
+          showToast('플레이리스트를 삭제했습니다')
+        } catch (failure) {
+          danger.replaceChildren(deleteButton)
+          error.textContent = `삭제하지 못했습니다: ${failure.message}`
+          error.hidden = false
+        }
+      })
+
+      confirmActions.append(cancelButton, reallyButton)
+      danger.replaceChildren(question, confirmActions)
+    })
+
+    danger.append(deleteButton)
+    body.append(form, danger)
+
+    dialog.addEventListener('close', () => resolve(result))
+
+    input.focus()
+    input.select()
+  })
 }
