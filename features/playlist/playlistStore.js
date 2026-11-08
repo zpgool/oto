@@ -9,6 +9,7 @@
 //
 // songs 에 youtube_id 칸을 더하는 SQL 은 db/youtube_songs.sql 에 있다.
 import { supabase } from '../../shared/js/supabase.js'
+import { failIf, toTrack, findSongId, ensureSong } from '../../shared/js/songStore.js'
 
 // 플레이리스트가 새로 생기거나 곡이 들고 날 때 알린다.
 // 사이드바처럼 목록을 들고 있는 쪽이 이 신호를 듣고 다시 그린다.
@@ -20,23 +21,6 @@ export function onPlaylistsChanged(callback) {
 
 function notifyChanged() {
   document.dispatchEvent(new CustomEvent(CHANGED_EVENT))
-}
-
-// Supabase 가 돌려주는 오류를 그대로 던진다. 부르는 쪽에서 사용자에게 보여준다.
-function failIf(error) {
-  if (error) throw new Error(error.message)
-}
-
-// songs 한 줄을 화면에서 쓰는 모양으로 바꾼다.
-// 플레이어와 검색 결과가 쓰는 이름(videoId, channel, thumbnail)에 맞춘다.
-function toTrack(song) {
-  return {
-    songId: song.id,
-    videoId: song.youtube_id,
-    title: song.title,
-    channel: song.artist,
-    thumbnail: song.album_art_url,
-  }
 }
 
 // ---- 플레이리스트 ----
@@ -119,50 +103,6 @@ export async function deletePlaylist(playlistId) {
 
   failIf(error)
   notifyChanged()
-}
-
-// ---- 곡 ----
-// 유튜브 영상 번호로 songs 에서 찾는다. 없으면 null.
-async function findSongId(videoId) {
-  const { data, error } = await supabase
-    .from('songs')
-    .select('id')
-    .eq('youtube_id', videoId)
-    .maybeSingle()
-
-  failIf(error)
-
-  return data?.id ?? null
-}
-
-// songs 에 이미 있으면 그 곡을, 없으면 새로 넣고 그 곡을 돌려준다.
-// 유튜브는 앨범과 재생 시간을 주지 않아서 그 두 칸은 비워 둔다.
-async function ensureSong(track) {
-  const found = await findSongId(track.videoId)
-  if (found) return found
-
-  const { data, error } = await supabase
-    .from('songs')
-    .insert({
-      youtube_id: track.videoId,
-      title: track.title,
-      artist: track.channel,
-      album_art_url: track.thumbnail,
-      audio_url: `https://www.youtube.com/watch?v=${track.videoId}`,
-    })
-    .select('id')
-    .single()
-
-  // 23505 = 같은 값이 이미 있음.
-  // 다른 창에서 같은 곡을 바로 직전에 넣은 경우라, 그 곡을 다시 찾아 쓴다.
-  if (error?.code === '23505') {
-    const added = await findSongId(track.videoId)
-    if (added) return added
-  }
-
-  failIf(error)
-
-  return data.id
 }
 
 // ---- 담긴 곡 ----

@@ -1,6 +1,6 @@
 <!-- 내 재생 차트 화면. 통째로 된 페이지가 아니라 app.html 안쪽에 들어가는 조각이다.
      shared/js/router.js 가 주소가 바뀔 때 이 파일을 읽어서 #view 에 넣는다.
-     그래서 이 파일을 브라우저로 직접 열면 디자인 없이 글자만 보인다. -->
+     내용은 features/chart/chart.js 가 Supabase 에서 받아와 채운다. -->
 <section class="chart-head">
   <span class="chart-label">내 통계</span>
   <h1 class="chart-title">
@@ -9,38 +9,13 @@
   <p class="chart-sub">지난 30일간 가장 많이 들은 노래</p>
 </section>
 
-<!-- TOP 3 시상대 -->
-<section class="podium">
-  <!-- 2위 -->
-  <div class="podium-item rank2">
-    <div class="podium-cover"></div>
-    <span class="podium-rank">02</span>
-    <span class="podium-name">Love wins all</span>
-    <span class="podium-artist">IU</span>
-    <span class="podium-count">452회 재생</span>
-  </div>
-  <!-- 1위 -->
-  <div class="podium-item rank1">
-    <div class="podium-cover"></div>
-    <span class="podium-rank">01</span>
-    <span class="podium-name">Bloody paradise</span>
-    <span class="podium-artist">ENHYPEN</span>
-    <span class="podium-count">460회 재생</span>
-  </div>
-  <!-- 3위 -->
-  <div class="podium-item rank3">
-    <div class="podium-cover"></div>
-    <span class="podium-rank">03</span>
-    <span class="podium-name">Samidare</span>
-    <span class="podium-artist">&TEAM</span>
-    <span class="podium-count">455회 재생</span>
-  </div>
-</section>
+<!-- TOP 3 시상대. 2위 1위 3위 순서로 놓인다. -->
+<section class="podium" id="chart-podium" hidden></section>
 
 <!-- 4위 ~ 100위 -->
-<section class="chart-rest">
-  <h3 class="section-title">4위 - 100위</h3>
-  <div class="track-table">
+<section class="chart-rest" id="chart-rest" hidden>
+  <h3 class="section-title" id="chart-rest-title">4위 - 100위</h3>
+  <div class="track-table" id="chart-table">
     <div class="table-head">
       <span class="col-rank">순위</span>
       <span class="col-title">곡</span>
@@ -49,35 +24,10 @@
       <span class="col-time">🕘</span>
       <span class="col-like">♡</span>
     </div>
-
-    <div class="table-row">
-      <span class="col-rank">4</span>
-      <span class="col-title">
-        <span class="row-thumb"></span>
-        <span class="row-info">
-          <span class="row-name">EASY</span>
-          <span class="row-artist">LE SSERAFIM</span>
-        </span>
-      </span>
-      <span class="col-album">EASY</span>
-      <span class="col-count">448회</span>
-      <span class="col-time">2:56</span>
-      <button class="col-like liked" aria-label="즐겨찾기">♥</button>
-    </div>
-
-    <div class="table-row">
-      <span class="col-rank">5</span>
-      <span class="col-title">
-        <span class="row-thumb"></span>
-        <span class="row-info">
-          <span class="row-name">Ivy</span>
-          <span class="row-artist">Frank Ocean</span>
-        </span>
-      </span>
-      <span class="col-album">Blonde</span>
-      <span class="col-count">456회</span>
-      <span class="col-time">4:09</span>
-      <button class="col-like liked" aria-label="즐겨찾기">♥</button>
-    </div>
   </div>
 </section>
+
+<!-- 아직 들은 곡이 없을 때 -->
+<p class="chart-empty" id="chart-empty" hidden>
+  지난 30일 동안 들은 노래가 없어요. 검색해서 한 곡 틀어보세요.
+</p>
