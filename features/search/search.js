@@ -132,7 +132,8 @@ function createRow(video, index) {
     createCell('col-album', video.channel),
     like,
     add,
-    createCell('col-time', '--:--'),
+    // youtube.js 가 재생 시간을 주면 보여준다. 아직 안 주면 --:-- 로 둔다.
+    createCell('col-time', video.duration ?? '--:--'),
   )
 
   return row
