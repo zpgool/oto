@@ -3,6 +3,7 @@
 // 검색한 말은 최근 검색어로 저장해서 다시 누르면 바로 검색된다.
 import { searchMusic } from './youtube.js'
 import { playTrack } from '../../shared/js/player.js'
+import { openAddToPlaylistModal } from '../playlist/playlistModal.js'
 import {
   getRecentSearches,
   addRecentSearch,
@@ -117,8 +118,9 @@ function createRow(video, index) {
   const add = document.createElement('button')
   add.className = 'col-add'
   add.type = 'button'
-  add.setAttribute('aria-label', '추가')
+  add.setAttribute('aria-label', `${video.title} 플레이리스트에 추가`)
   add.textContent = '+'
+  add.addEventListener('click', () => openAddToPlaylistModal(video))
 
   row.append(
     createCell('col-num', String(index + 1)),
