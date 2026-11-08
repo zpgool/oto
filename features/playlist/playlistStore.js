@@ -137,7 +137,7 @@ async function findSongId(videoId) {
 
 // songs 에 이미 있으면 그 곡을, 없으면 새로 넣고 그 곡을 돌려준다.
 // 유튜브는 앨범과 재생 시간을 주지 않아서 그 두 칸은 비워 둔다.
-async function ensureSong(track) {
+export async function ensureSong(track) {
   const found = await findSongId(track.videoId)
   if (found) return found
 

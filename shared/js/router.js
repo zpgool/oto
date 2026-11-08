@@ -33,9 +33,11 @@ const ROUTES = {
     load: () => import('../../features/playlist/playlist.js'),
     keep: false,
   },
-    '/favorite': {
+      '/favorite': {
     view: '../../features/favorite/favoriteScreen.html',
     title: '즐겨찾기',
+    load: () => import('../../features/favorite/favorite.js'),
+    keep: false,
   },
 }
 
