@@ -4,9 +4,6 @@ import { listPlaylists, onPlaylistsChanged } from '../playlist/playlistStore.js'
 import { loadFavoriteIds, onFavoritesChanged } from '../favorite/favoriteStore.js'
 import { getSession, onAuthChange, displayName } from '../../shared/js/auth.js'
 
-// 바로 가기에 둘 플레이리스트 개수. 즐겨찾기 카드까지 합쳐 한 줄(3칸)에 맞춘다.
-const SHORTCUT_PLAYLISTS = 2
-
 let greeting
 let shortcutGrid
 let grid
@@ -50,26 +47,24 @@ function createShortcut({ href, name, count, favorite = false }) {
   return card
 }
 
-// 즐겨찾기 + 최근에 만든 플레이리스트 몇 개.
-// 플레이리스트는 아래 목록을 받을 때 같이 오므로 따로 더 물어보지 않는다.
-function renderShortcuts(playlists, favoriteCount) {
-  // listPlaylists 는 만든 순서(오래된 것부터)로 주므로 뒤에서부터 가져온다.
-  const recent = [...playlists].reverse().slice(0, SHORTCUT_PLAYLISTS)
+// 지금은 즐겨찾기 하나뿐이다. 곡 수를 받아오지 못해도 카드는 보여준다.
+async function renderShortcuts() {
+  // 홈 화면을 떠난 뒤에 신호가 올 수 있다. 그때는 그릴 곳이 없다.
+  if (!shortcutGrid?.isConnected) return
+
+  let count = 0
+
+  try {
+    count = (await loadFavoriteIds()).size
+  } catch (error) {
+    console.error('즐겨찾기를 불러오지 못했습니다:', error.message)
+  }
+
+  // 기다리는 사이에 화면을 떠났을 수 있다.
+  if (!shortcutGrid.isConnected) return
 
   shortcutGrid.replaceChildren(
-    createShortcut({
-      href: '#/favorite',
-      name: '즐겨찾기',
-      count: favoriteCount,
-      favorite: true,
-    }),
-    ...recent.map((playlist) =>
-      createShortcut({
-        href: `#/playlist/${playlist.id}`,
-        name: playlist.name,
-        count: playlist.trackCount,
-      }),
-    ),
+    createShortcut({ href: '#/favorite', name: '즐겨찾기', count, favorite: true }),
   )
 }
 
@@ -98,8 +93,7 @@ function createCard(playlist) {
   return card
 }
 
-async function render() {
-  // 홈 화면을 떠난 뒤에 신호가 올 수 있다. 그때는 그릴 곳이 없다.
+async function renderPlaylists() {
   if (!grid?.isConnected) return
 
   let playlists
@@ -111,22 +105,10 @@ async function render() {
     return
   }
 
+  if (!grid.isConnected) return
+
   grid.replaceChildren(...playlists.map(createCard))
   emptyMessage.hidden = playlists.length > 0
-
-  // 즐겨찾기를 못 받아도 바로 가기는 보여준다. 곡 수만 0 으로 둔다.
-  let favoriteCount = 0
-
-  try {
-    favoriteCount = (await loadFavoriteIds()).size
-  } catch (error) {
-    console.error('즐겨찾기를 불러오지 못했습니다:', error.message)
-  }
-
-  // 화면을 떠났는지 다시 본다. 위에서 기다리는 동안 바뀌었을 수 있다.
-  if (!shortcutGrid?.isConnected) return
-
-  renderShortcuts(playlists, favoriteCount)
 }
 
 // ---- 시작 ----
@@ -137,7 +119,8 @@ export async function init() {
   grid = document.querySelector('#playlist-grid')
   emptyMessage = document.querySelector('#playlist-empty')
 
-  render()
+  renderShortcuts()
+  renderPlaylists()
 
   renderGreeting(await getSession())
 }
@@ -145,13 +128,13 @@ export async function init() {
 // ---- 구독 ----
 // 홈은 들어올 때마다 init() 이 다시 불리므로, 구독을 거기서 걸면 리스너가 쌓인다.
 // 모듈은 한 번만 불러오니 여기서 한 번만 건다.
-// 홈을 떠난 사이에 신호가 와도 render 가 isConnected 로 걸러낸다.
+// 홈을 떠난 사이에 신호가 와도 각 render 가 isConnected 로 걸러낸다.
 
 // 다른 탭에서 계정이 바뀌어도 따라간다.
 onAuthChange(renderGreeting)
 
-// 플레이리스트가 생기거나 곡이 들고 나면 다시 그린다.
-onPlaylistsChanged(render)
+// 플레이리스트가 생기거나 곡이 들고 나면 그 칸만 다시 그린다.
+onPlaylistsChanged(renderPlaylists)
 
 // 어느 화면에서든 하트를 누르면 바로 가기의 곡 수도 따라 바뀐다.
-onFavoritesChanged(render)
+onFavoritesChanged(renderShortcuts)
