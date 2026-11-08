@@ -1,0 +1,35 @@
+<!-- 즐겨찾기 화면 조각. app.html 안쪽 #view 에 들어간다.
+     이 파일을 직접 열면 디자인 없이 글자만 보인다. -->
+
+<!-- 헤더 -->
+<section class="fav-head">
+  <div class="fav-cover"></div>
+  <div class="fav-meta">
+    <span class="fav-label">즐겨찾기</span>
+    <h1 class="fav-title">좋아요 표시한 곡</h1>
+    <span class="fav-sub">Jungwon · 6곡</span>
+  </div>
+</section>
+
+<!-- 액션 버튼 -->
+<div class="fav-actions">
+  <button type="button" class="btn-play-circle" aria-label="재생">▶</button>
+</div>
+
+<!-- 곡 목록 -->
+<div class="track-table" id="fav-table">
+  <div class="table-head">
+    <span class="col-title">제목</span>
+    <span class="col-album">앨범</span>
+    <span class="col-time">🕘</span>
+    <span class="col-like">♡</span>
+  </div>
+  <!-- 행은 favorite.js 가 채운다 -->
+</div>
+
+<!-- 즐겨찾기 없을 때 -->
+<div class="empty-box" id="fav-empty" hidden>
+  <p class="empty-title">아직 즐겨찾기한 곡이 없어요</p>
+  <p class="empty-desc">마음에 드는 노래에 하트를 눌러보세요.</p>
+</div>
+

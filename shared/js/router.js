@@ -37,6 +37,13 @@ const ROUTES = {
     load: () => import('../../features/playlist/playlist.js'),
     keep: false,
   },
+  '/favorite': {
+    view: '../../features/favorite/favoriteScreen.html',
+    title: '즐겨찾기',
+    load: () => import('../../features/favorite/favorite.js'),
+    // 즐겨찾기를 켜고 끄면 목록이 바뀌는 화면이라, 들어올 때마다 새로 받아온다.
+    keep: false,
+  },
 }
 
 const DEFAULT_PATH = '/home'
