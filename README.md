@@ -11,11 +11,10 @@
   그래서 화면을 옮겨도 음악이 끊기지 않는다.
 
 ```
-app.html#/home          홈
-app.html#/search        검색
-app.html#/chart         내 재생 차트
-app.html#/playlist      플레이리스트
-app.html#/playlist/new  새 플레이리스트
+app.html#/home           홈
+app.html#/search         검색
+app.html#/chart          내 재생 차트
+app.html#/playlist/<id>  플레이리스트 하나
 ```
 
 `features/*/...Screen.html` 들은 통째로 된 페이지가 아니라 **가운데에 들어가는
@@ -31,16 +30,37 @@ features/               기능 단위로 html + css + js 를 함께 둔다
   home/      homeScreen.html, homeScreen.css
   search/    searchScreen.html, searchScreen.css, search.js,
              recentSearch.js(최근 검색어), youtube.js(API 키)
-  playlist/  playlistScreen.html, newPlaylistScreen.html, playlistScreen.css
+  playlist/  playlistScreen.html, playlistScreen.css, playlist.js,
+             playlistStore.js(Supabase 읽고 쓰기), playlistModal.js(팝업)
   chart/     personalChartScreen.html, personalChartScreen.css
 shared/                 여러 화면이 같이 쓰는 것
-  css/       reset.css, common.css
+  css/       reset.css, common.css, modal.css
   js/        supabase.js(접속 정보), auth.js(로그인 함수),
              app.js(로그인 확인 + 상단 버튼), router.js(화면 전환),
              sidebar.js, player.js(음악 재생), passwordToggle.js
   partials/  sidebar.html, player.html (한 벌만 두고 같이 쓴다)
+db/        youtube_songs.sql (기존 Supabase 표에 모자란 것만 더하는 SQL)
 img/
 ```
+
+## 플레이리스트
+
+Supabase 에 이미 있는 표 세 개를 쓴다.
+
+- `songs` — 곡 정보 한 벌. 모두가 같이 쓴다. `youtube_id` 로 같은 곡인지 가린다.
+- `playlists` — 플레이리스트. `user_id` 가 주인.
+- `playlist_songs` — 어느 플레이리스트에 어떤 곡. `position` 이 순서.
+
+- 사이드바 '내 플레이리스트' 옆 **+** → 이름을 넣는 팝업 → 만들면 그 화면으로 이동
+- 검색 결과의 **+** → 어디에 담을지 고르는 팝업
+- 같은 곡을 같은 플레이리스트에 두 번 담을 수 없다. 이미 담긴 곳은 '담김' 으로
+  표시되고 눌리지 않으며, 표에도 `unique (playlist_id, song_id)` 로 막혀 있다.
+
+검색 결과를 담으면 `songs` 에 그 곡이 있는지 `youtube_id` 로 찾아보고,
+없으면 새로 넣은 다음 `playlist_songs` 로 잇는다.
+
+남의 플레이리스트가 보이지 않는 건 Supabase 의 보안 규칙(RLS) 덕분이다.
+anon key 는 공개되는 값이라 이 규칙이 유일한 울타리다. 끄면 안 된다.
 
 ## 화면을 하나 더 만들려면
 
@@ -59,6 +79,10 @@ img/
 
 - `shared/js/supabase.js` — Supabase URL 과 anon key
 - `features/search/youtube.js` — `features/search/youtube.example.js` 를 복사해서 YouTube API 키 입력
+
+표는 이미 만들어져 있다. 모자란 것(songs 의 youtube_id 칸, 곡 추가 권한)만
+한 번 더해주면 된다. Supabase 대시보드 > SQL Editor 에 `db/youtube_songs.sql` 을
+붙여넣고 실행한다.
 
 Live Server 등 로컬 서버로 열어야 한다. 파일을 직접 열면(file://) 사이드바와 화면을
 불러오지 못한다.

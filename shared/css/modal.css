@@ -1,0 +1,162 @@
+/* =========================================
+   팝업 (<dialog>)
+   플레이리스트 만들기 / 곡 담기에서 같이 쓴다.
+========================================= */
+.modal {
+  width: min(420px, calc(100vw - 32px));
+  padding: 0;
+  /* reset.css 의 * { margin: 0 } 이 브라우저 기본 margin: auto 를 덮어써서
+     팝업이 왼쪽 위에 붙는다. 여기서 가운데로 되돌린다. */
+  inset: 0;
+  margin: auto;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-card);
+  color: var(--text-normal);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.18);
+}
+/* 팝업 뒤 어두운 배경 */
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.4);
+}
+
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 12px;
+}
+.modal-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+.modal-close {
+  font-size: 20px;
+  line-height: 1;
+  color: var(--text-muted);
+}
+.modal-close:hover {
+  color: var(--text-strong);
+}
+
+.modal-body {
+  padding: 0 20px 20px;
+}
+
+/* 어떤 곡을 담는지 보여주는 줄 */
+.modal-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.modal-status,
+.modal-empty {
+  font-size: 13px;
+  color: var(--text-muted);
+  padding: 8px 0;
+}
+.modal-error {
+  font-size: 13px;
+  color: var(--accent);
+  margin-top: 10px;
+}
+
+/* ---- 플레이리스트 고르기 ---- */
+.modal-list {
+  display: flex;
+  flex-direction: column;
+  max-height: 280px;
+  overflow-y: auto;
+}
+.modal-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-normal);
+  text-align: left;
+  transition: background 0.15s;
+}
+.modal-item:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+/* 이미 담긴 플레이리스트 */
+.modal-item:disabled {
+  color: var(--text-muted);
+  cursor: default;
+}
+.modal-item-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.modal-item-note {
+  flex-shrink: 0;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.modal-item-new {
+  margin-top: 4px;
+  border-top: 1px solid var(--border);
+  border-radius: 0 0 8px 8px;
+  color: var(--accent);
+}
+
+/* ---- 이름 입력 ---- */
+.modal-form {
+  display: flex;
+  flex-direction: column;
+}
+.modal-input {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--bg-main);
+  font-size: 14px;
+  color: var(--text-strong);
+}
+.modal-input:focus {
+  border-color: var(--accent);
+}
+.modal-input::placeholder {
+  color: var(--text-muted);
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 16px;
+}
+.modal-btn {
+  padding: 9px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-normal);
+  transition: background 0.15s;
+}
+.modal-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+.modal-btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.modal-btn-primary:hover:not(:disabled) {
+  background: #d9714e;
+}
+.modal-btn-primary:disabled {
+  background: var(--text-muted);
+  cursor: default;
+}
