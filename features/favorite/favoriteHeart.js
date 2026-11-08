@@ -33,13 +33,6 @@ export function attachHeart(button, getTrack) {
   }
 
   async function refresh() {
-    // 화면이 바뀌어 이 버튼이 사라졌으면 더 듣지 않는다.
-    // 라우터가 화면을 갈아 끼울 때마다 옛 버튼이 쌓이는 것을 막는다.
-    if (!button.isConnected) {
-      offFavoritesChanged(refresh)
-      return
-    }
-
     const track = getTrack()
 
     // 걸린 곡이 없으면 누를 것도 없다. (플레이어 바의 처음 상태)
@@ -86,7 +79,23 @@ export function attachHeart(button, getTrack) {
   })
 
   // 다른 화면에서 같은 곡을 켜고 끄면 이 하트도 따라 바뀐다.
-  onFavoritesChanged(refresh)
+  //
+  // 구독 해지는 여기서만 판단한다. refresh 안에서 하면 안 된다 —
+  // 목록의 행은 표에 붙기 전에 만들어져서, 처음 칠할 때는 아직 문서에 없다.
+  function handleChange() {
+    // 화면이 바뀌어 이 버튼이 사라졌으면 더 듣지 않는다.
+    if (!button.isConnected) {
+      offFavoritesChanged(handleChange)
+      return
+    }
+
+    refresh()
+  }
+
+  onFavoritesChanged(handleChange)
+
+  // 목록을 받아오기 전에도 하트 모양은 보여야 한다. 먼저 빈 하트로 칠해 둔다.
+  paint(false)
   refresh()
 
   return refresh
