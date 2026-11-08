@@ -32,6 +32,10 @@ const ROUTES = {
     title: '새 플레이리스트',
     klass: 'content-pl',
   },
+    '/favorite': {
+    view: '../../features/favorite/favoriteScreen.html',
+    title: '즐겨찾기',
+  },
 }
 
 const DEFAULT_PATH = '/home'
