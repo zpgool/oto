@@ -17,6 +17,9 @@ const ROUTES = {
     view: '../../features/home/homeScreen.html',
     title: '홈',
     load: () => import('../../features/home/home.js'),
+    // 즐겨찾기·플레이리스트 곡 수를 보여주는 화면이라, 들어올 때마다 새로 받아온다.
+    // (보관해 두면 다른 화면에서 하트를 눌러도 옛 숫자가 그대로 남는다)
+    keep: false,
   },
   '/search': {
     view: '../../features/search/searchScreen.html',
