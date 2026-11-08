@@ -13,6 +13,11 @@ import { showToast } from '../../shared/js/toast.js'
 let table
 let emptyBox
 let subEl
+let playButton
+
+// 지금 화면에 보이는 곡들. 재생 버튼이 첫 곡을 틀 때 쓴다.
+// 하트로 해제하면 화면에서 지우는 것과 함께 이 목록에서도 뺀다.
+let tracks = []
 
 // class 와 글자만 넣은 <span> 칸 하나를 만든다. (검색·플레이리스트 화면과 같은 도우미)
 function createCell(className, text) {
@@ -61,7 +66,8 @@ function createRow(track) {
     try {
       await removeFavorite(track.videoId)
       row.remove()       // DB 에서 지웠으니 화면에서도 뺀다
-      updateCount()      // 남은 곡 수 / 빈 상태를 다시 맞춘다
+      tracks = tracks.filter((item) => item.videoId !== track.videoId)
+      updateCount()      // 남은 곡 수 / 빈 상태 / 재생 버튼을 다시 맞춘다
       showToast('즐겨찾기에서 뺐습니다')
     } catch (failure) {
       // 실패하면 행을 그대로 두고 버튼을 다시 풀어, 또 눌러볼 수 있게 한다.
@@ -81,14 +87,15 @@ function createRow(track) {
   return row
 }
 
-// 표에 남은 곡 수를 세어, 부제목과 "빈 상태" 안내를 다시 맞춘다.
+// 남은 곡 수를 세어 부제목·"빈 상태" 안내·재생 버튼을 다시 맞춘다.
 // 곡을 해제해서 0 개가 되면 표를 숨기고 빈 상태 안내를 보여준다.
 function updateCount() {
-  const count = table.querySelectorAll('.table-row').length
+  const count = tracks.length
 
-  if (subEl) subEl.textContent = `내 즐겨찾기 · ${count}곡`
+  subEl.textContent = `${count}곡`
   emptyBox.hidden = count > 0
   table.hidden = count === 0
+  playButton.disabled = count === 0
 }
 
 // ---- 시작 ----
@@ -97,9 +104,16 @@ export async function init() {
   table = document.querySelector('#fav-table')
   emptyBox = document.querySelector('#fav-empty')
   subEl = document.querySelector('#fav-sub')
+  playButton = document.querySelector('#fav-play')
+  tracks = []
+
+  // 아직 재생 목록 기능이 없어서 첫 곡만 튼다. (플레이리스트 화면과 같다)
+  playButton.addEventListener('click', () => {
+    if (tracks.length > 0) playTrack(tracks[0])
+  })
 
   try {
-    const tracks = await listFavorites()
+    tracks = await listFavorites()
 
     // 헤더 행만 남기고(혹시 모를) 기존 행을 지운 뒤, 불러온 곡으로 채운다.
     table.querySelectorAll('.table-row').forEach((row) => row.remove())
@@ -108,6 +122,6 @@ export async function init() {
     updateCount()
   } catch (failure) {
     console.error('즐겨찾기를 불러오지 못했습니다:', failure)
-    if (subEl) subEl.textContent = '불러오지 못했습니다'
+    subEl.textContent = '불러오지 못했습니다'
   }
 }
