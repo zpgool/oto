@@ -45,14 +45,6 @@
   color: var(--text-muted);
 }
 
-/* 액션 버튼 */
-.fav-actions {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
 /* 즐겨찾기 테이블 컬럼 (# / 제목 / 앨범 / 시간 / 하트) */
 .fav-head ~ .track-table .table-head,
 .fav-head ~ .track-table .table-row {

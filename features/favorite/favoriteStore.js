@@ -20,8 +20,43 @@ export function onFavoritesChanged(callback) {
   document.addEventListener(CHANGED_EVENT, callback)
 }
 
+// 화면에서 사라진 하트가 계속 신호를 받지 않도록 끊는다.
+export function offFavoritesChanged(callback) {
+  document.removeEventListener(CHANGED_EVENT, callback)
+}
+
 function notifyChanged() {
   document.dispatchEvent(new CustomEvent(CHANGED_EVENT))
+}
+
+// ---- 즐겨찾기한 곡 번호 모음 (캐시) ----
+// 하트가 달린 행이 30개면 행마다 물어볼 수 없으니, 한 번 받아서 들고 있는다.
+// 넣고 뺄 때마다 여기도 같이 고쳐서 다시 받아오지 않는다.
+let cachedIds = null
+
+// 같은 순간에 여러 하트가 동시에 물어봐도 요청은 한 번만 나가게 묶어 둔다.
+let loadingIds = null
+
+export async function loadFavoriteIds() {
+  if (cachedIds) return cachedIds
+
+  if (!loadingIds) {
+    loadingIds = listFavoriteVideoIds()
+      .then((ids) => {
+        cachedIds = ids
+        return ids
+      })
+      .finally(() => {
+        loadingIds = null
+      })
+  }
+
+  return loadingIds
+}
+
+// 이미 받아둔 목록으로 바로 답한다. loadFavoriteIds() 를 먼저 불러야 한다.
+export function isFavorite(videoId) {
+  return cachedIds?.has(videoId) ?? false
 }
 
 // ---- 읽기 ----
@@ -76,6 +111,7 @@ export async function addFavorite(track) {
   // 빠르게 두 번 눌렀거나 다른 탭에서 먼저 넣은 경우라, 오류로 보지 않고 넘어간다.
   if (error && error.code !== '23505') failIf(error)
 
+  cachedIds?.add(track.videoId)
   notifyChanged()
 }
 
@@ -91,7 +127,10 @@ export async function removeFavorite(videoId) {
   failIf(findError)
 
   // songs 에 아예 없는 곡이면 즐겨찾기에도 있을 수 없으니 그냥 끝낸다.
-  if (!song) return
+  if (!song) {
+    cachedIds?.delete(videoId)
+    return
+  }
 
   // 찾은 번호로 내 즐겨찾기에서 지운다. (RLS 가 내 행만 지우도록 막아준다)
   const { error } = await supabase
@@ -100,6 +139,8 @@ export async function removeFavorite(videoId) {
     .eq('song_id', song.id)
 
   failIf(error)
+
+  cachedIds?.delete(videoId)
   notifyChanged()
 }
 

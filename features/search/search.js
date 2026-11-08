@@ -10,8 +10,7 @@ import {
   removeRecentSearch,
   clearRecentSearches,
 } from './recentSearch.js'
-import { toggleFavorite } from '../favorite/favoriteStore.js'
-
+import { attachHeart } from '../favorite/favoriteHeart.js'
 
 // ---- DOM ----
 // 검색 화면에 들어올 때마다 HTML 이 새로 만들어지므로, init() 에서 다시 찾아 담는다.
@@ -112,30 +111,11 @@ function createRow(video, index) {
   title.append(thumb, info)
 
   // 하트 버튼: 누르면 즐겨찾기에 넣거나 뺀다.
+  // 이미 즐겨찾기한 곡이면 attachHeart 가 채워진 하트(♥)로 칠해 준다.
   const like = document.createElement('button')
   like.className = 'col-like'
   like.type = 'button'
-  like.setAttribute('aria-label', '즐겨찾기')
-  like.textContent = '♡'
-  like.addEventListener('click', async () => {
-    // 지금 켜져 있는지는 'liked' 클래스로 판단한다.
-    const isFavorite = like.classList.contains('liked')
-
-    // 응답을 기다리는 동안 두 번 눌리지 않게 잠근다.
-    like.disabled = true
-
-    try {
-      const nowFavorite = await toggleFavorite(video, isFavorite)
-
-      // 바뀐 상태에 맞춰 하트 모양과 클래스를 바꾼다. (♥ = 즐겨찾기됨)
-      like.classList.toggle('liked', nowFavorite)
-      like.textContent = nowFavorite ? '♥' : '♡'
-    } catch (failure) {
-      alert(`즐겨찾기에 실패했습니다: ${failure.message}`)
-    } finally {
-      like.disabled = false
-    }
-  })
+  attachHeart(like, () => video)
 
   // 플러스 버튼: 누르면 플레이리스트에 추가하는 팝업을 띄운다.
   const add = document.createElement('button')

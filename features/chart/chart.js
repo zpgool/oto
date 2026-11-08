@@ -1,6 +1,7 @@
 // features/chart/chart.js
 // 지난 30일 동안 많이 들은 노래를 1~3위 시상대와 4위 아래 표로 보여준다.
 import { getPlayChart } from './chartStore.js'
+import { attachHeart } from '../favorite/favoriteHeart.js'
 
 // ---- DOM ----
 // 화면에 들어올 때마다 새로 만들어지므로 init() 에서 다시 찾는다.
@@ -82,11 +83,11 @@ function createRow(track) {
   info.append(createCell('row-name', track.title), createCell('row-artist', track.channel))
   title.append(thumb, info)
 
+  // 하트: 누르면 즐겨찾기에 넣고 뺀다. 모양·알림은 attachHeart 가 맡는다.
   const like = document.createElement('button')
   like.className = 'col-like'
   like.type = 'button'
-  like.setAttribute('aria-label', '즐겨찾기')
-  like.textContent = '♡'
+  attachHeart(like, () => track)
 
   row.append(
     createCell('col-rank', String(track.rank)),
