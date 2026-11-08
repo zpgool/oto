@@ -1,0 +1,60 @@
+/* 즐겨찾기 헤더 */
+.fav-head {
+  display: flex;
+  align-items: flex-end;
+  gap: 28px;
+  margin-bottom: 24px;
+}
+.fav-cover {
+  width: 180px;
+  height: 180px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--accent), #f0a58a);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  flex-shrink: 0;
+  position: relative;
+}
+.fav-cover::after {
+  content: "♥";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 64px;
+}
+.fav-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.fav-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+.fav-title {
+  font-size: 44px;
+  font-weight: 800;
+  color: var(--text-strong);
+  letter-spacing: -1px;
+}
+.fav-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* 액션 버튼 */
+.fav-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+/* 즐겨찾기 테이블 컬럼 (# / 제목 / 앨범 / 시간 / 하트) */
+.fav-head ~ .track-table .table-head,
+.fav-head ~ .track-table .table-row {
+  grid-template-columns: 1fr 220px 56px 40px;
+}

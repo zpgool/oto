@@ -1,0 +1,60 @@
+<!-- 즐겨찾기 화면 조각. app.html 안쪽 #view 에 들어간다.
+     이 파일을 직접 열면 디자인 없이 글자만 보인다. -->
+
+<!-- 헤더 -->
+<section class="fav-head">
+  <div class="fav-cover"></div>
+  <div class="fav-meta">
+    <span class="fav-label">즐겨찾기</span>
+    <h1 class="fav-title">좋아요 표시한 곡</h1>
+    <span class="fav-sub">Jungwon · 6곡</span>
+  </div>
+</section>
+
+<!-- 액션 버튼 -->
+<div class="fav-actions">
+  <button type="button" class="btn-play-circle" aria-label="재생">▶</button>
+</div>
+
+<!-- 곡 목록 -->
+<div class="track-table">
+  <div class="table-head">
+    <span class="col-title">제목</span>
+    <span class="col-album">앨범</span>
+    <span class="col-time">🕘</span>
+    <span class="col-like">♡</span>
+  </div>
+
+  <!-- js로 채울 부분 (예시) -->
+  <div class="table-row">
+    <span class="col-title">
+      <span class="row-thumb"></span>
+      <span class="row-info">
+        <span class="row-name">Supernatural</span>
+        <span class="row-artist">NewJeans</span>
+      </span>
+    </span>
+    <span class="col-album">Supernatural</span>
+    <span class="col-time">3:26</span>
+    <button class="col-like liked" aria-label="즐겨찾기 해제">♥</button>
+  </div>
+
+  <div class="table-row">
+    <span class="col-title">
+      <span class="row-thumb"></span>
+      <span class="row-info">
+        <span class="row-name">EASY</span>
+        <span class="row-artist">LE SSERAFIM</span>
+      </span>
+    </span>
+    <span class="col-album">EASY</span>
+    <span class="col-time">2:56</span>
+    <button class="col-like liked" aria-label="즐겨찾기 해제">♥</button>
+  </div>
+</div>
+
+<!-- 즐겨찾기 없을 때 (곡 있으면 숨김) -->
+<div class="empty-box" hidden>
+  <p class="empty-title">아직 즐겨찾기한 곡이 없어요</p>
+  <p class="empty-desc">마음에 드는 노래에 하트를 눌러보세요.</p>
+</div>
