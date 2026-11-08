@@ -160,3 +160,28 @@
   background: var(--text-muted);
   cursor: default;
 }
+
+/* ---- 삭제처럼 되돌릴 수 없는 것 ---- */
+.modal-danger {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+.modal-confirm {
+  width: 100%;
+  font-size: 13px;
+  color: var(--text-normal);
+}
+.modal-btn-danger {
+  color: #c0392b;
+}
+.modal-btn-danger:hover:not(:disabled) {
+  background: #fbe9e7;
+}
+.modal-btn-danger:disabled {
+  color: var(--text-muted);
+  cursor: default;
+}
