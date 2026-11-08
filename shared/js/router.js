@@ -16,6 +16,7 @@ const ROUTES = {
   '/home': {
     view: '../../features/home/homeScreen.html',
     title: '홈',
+    load: () => import('../../features/home/home.js'),
   },
   '/search': {
     view: '../../features/search/searchScreen.html',

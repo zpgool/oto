@@ -35,13 +35,9 @@
         <h3 class="section-title">플레이리스트</h3>
         <button type="button" class="btn-new-playlist">＋ 새 플레이리스트</button>
     </div>
-    <ul class="playlist-grid" id="playlist-grid">
-        <li class="playlist-card">
-            <a href="#">
-                <span class="card-cover"></span>
-                <span class="card-title">BrUnOm4rs</span>
-                <span class="card-desc">12곡 · 37m</span>
-            </a>
-        </li>
-    </ul>
+    <!-- 목록은 features/home/home.js 가 Supabase 에서 받아와 채운다 -->
+    <ul class="playlist-grid" id="playlist-grid"></ul>
+    <p class="playlist-empty" id="playlist-empty" hidden>
+        아직 플레이리스트가 없어요. ＋ 새 플레이리스트로 만들어보세요.
+    </p>
 </section>
