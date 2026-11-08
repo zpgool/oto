@@ -19,17 +19,8 @@
             <span>내 플레이리스트</span>
             <button type="button" class="btn-add-playlist" aria-label="플레이리스트 추가">+</button>
         </div>
-        <ul id="playlist-list">
-            <li>
-                <a href="#/playlist">
-                    <span class="pl-thumb"></span>
-                    <span class="pl-info">
-                        <span class="pl-name">BrUnOm4rs</span>
-                        <span class="pl-count">12곡</span>
-                    </span>
-                </a>
-            </li>
-        </ul>
+        <!-- 목록은 shared/js/sidebar.js 가 Supabase 에서 받아와 채운다 -->
+        <ul id="playlist-list"></ul>
     </div>
 
     <!-- 이름/이메일은 shared/js/sidebar.js 가 로그인한 사용자 정보로 채운다 -->

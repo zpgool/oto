@@ -3,6 +3,7 @@
 // 사이드바와 플레이어 바처럼 화면이 바뀌어도 그대로 남는 것들을 여기서 다룬다.
 import { signOut, getSession, onAuthChange } from './auth.js'
 import { startRouter } from './router.js'
+import { openCreatePlaylistModal } from '../../features/playlist/playlistModal.js'
 
 // 이 파일(shared/js/) 기준이라 app.html 을 어디서 열어도 경로가 맞는다.
 const SIGNIN_PAGE = new URL('../../features/auth/signIn.html', import.meta.url).href
@@ -44,9 +45,12 @@ document.querySelector('#logout-button').addEventListener('click', async () => {
 // ---- 새 플레이리스트 버튼 ----
 // 사이드바의 + 와 홈 화면의 '＋ 새 플레이리스트' 를 같이 받는다.
 // 홈 화면은 들어올 때마다 새로 만들어지므로, 버튼이 아니라 document 에 걸어둔다.
-document.addEventListener('click', (event) => {
+document.addEventListener('click', async (event) => {
   if (event.target.closest('.btn-add-playlist, .btn-new-playlist')) {
-    location.hash = '#/playlist/new'
+    const playlist = await openCreatePlaylistModal()
+
+    // 만들었으면 바로 그 플레이리스트를 열어준다.
+    if (playlist) location.hash = `#/playlist/${playlist.id}`
   }
 
   // 아직 갈 곳이 없는 링크(href="#")를 누르면 주소가 비워지면서 홈으로 튀어버린다.
