@@ -1,6 +1,8 @@
 // shared/js/player.js
 // 하단 플레이어 바를 모든 페이지에 넣고, 유튜브 IFrame API 로 소리만 재생한다.
 // 쓰는 쪽에서는 playTrack({ videoId, title, channel, thumbnail }) 만 부르면 된다.
+import { recordPlay } from '../../features/chart/chartStore.js'
+
 const PLAYER_PATH = new URL('../partials/player.html', import.meta.url)
 const IFRAME_API_SRC = 'https://www.youtube.com/iframe_api'
 
@@ -304,4 +306,7 @@ export async function playTrack(track) {
 
   showTrack(track)
   ytPlayer.loadVideoById(track.videoId)
+
+  // 재생 차트에 쓸 기록. 기다리지 않는다. 실패해도 재생에는 지장이 없다.
+  recordPlay(track)
 }

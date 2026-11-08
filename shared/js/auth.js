@@ -31,6 +31,16 @@ export async function getSession() {
   return data.session
 }
 
+// 화면에 보여줄 이름.
+// 이메일/비밀번호 가입에는 이름이 따로 없어서, 있으면 가입 때 저장한 이름을,
+// 없으면 이메일 앞부분을 쓴다. (jungwon@oto.com -> jungwon)
+export function displayName(user) {
+  if (!user) return ''
+
+  const metadata = user.user_metadata ?? {}
+  return metadata.display_name ?? metadata.name ?? user.email.split('@')[0]
+}
+
 // 로그인/로그아웃/토큰 갱신 때마다 callback(session) 호출
 export function onAuthChange(callback) {
   supabase.auth.onAuthStateChange((_event, session) => callback(session))

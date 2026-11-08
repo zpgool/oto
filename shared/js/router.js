@@ -26,6 +26,9 @@ const ROUTES = {
   '/chart': {
     view: '../../features/chart/personalChartScreen.html',
     title: '내 재생 차트',
+    load: () => import('../../features/chart/chart.js'),
+    // 들을 때마다 바뀌는 화면이라, 들어올 때마다 새로 받아온다.
+    keep: false,
   },
   '/playlist/:id': {
     view: '../../features/playlist/playlistScreen.html',
