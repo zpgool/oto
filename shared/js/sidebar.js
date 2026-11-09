@@ -26,6 +26,10 @@ function createPlaylistItem(playlist) {
 
   const thumb = document.createElement('span')
   thumb.className = 'pl-thumb'
+    // 커버 사진이 있으면 배경으로 깔아줌. 없으면 CSS 기본 그라데이션.
+  if (playlist.coverUrl) {
+    thumb.style.backgroundImage = `url(${playlist.coverUrl})`
+  }
 
   const info = document.createElement('span')
   info.className = 'pl-info'

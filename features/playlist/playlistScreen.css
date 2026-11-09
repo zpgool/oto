@@ -13,6 +13,8 @@
   height: 180px;
   border-radius: var(--radius);
   background: linear-gradient(135deg, #a8c0c8, #7d9aa3);
+  background-size: cover;      /* 사진이 네모를 꽉 채우도록 */
+  background-position: center; /* 가운데 기준으로 */
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
   flex-shrink: 0;
 }
@@ -142,3 +144,31 @@
   opacity: 0.4;
   background: var(--bg-hover);
 }
+
+/* 새 플레이리스트 만들기 창의 커버 사진 고르기 버튼 */
+.modal-cover-pick {
+  width: 120px;
+  height: 120px;
+  border-radius: var(--radius);
+  border: 2px dashed var(--border);
+  background: var(--bg-card);
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 4px;
+  background-size: cover;
+  background-position: center;
+}
+.modal-cover-pick:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+/* 사진을 고른 뒤에는 점선 테두리를 없애 깔끔하게 */
+.modal-cover-pick.has-image {
+  border-style: solid;
+  border-color: transparent;
+}
+

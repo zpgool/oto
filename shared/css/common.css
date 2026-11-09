@@ -115,6 +115,8 @@
   height: 34px;
   border-radius: 6px;
   background: linear-gradient(135deg, #a8c0c8, #7d9aa3);
+  background-size: cover;
+  background-position: center;
   flex-shrink: 0;
 }
 .pl-info {
