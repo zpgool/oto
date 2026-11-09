@@ -31,7 +31,9 @@
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 12px;
-  transition: background 0.15s, transform 0.15s;
+  transition:
+    background 0.15s,
+    transform 0.15s;
 }
 .shortcut-card a:hover {
   background: var(--bg-hover);
@@ -93,8 +95,12 @@
   aspect-ratio: 1 / 1;
   border-radius: var(--radius);
   background: linear-gradient(135deg, #a8c0c8, #7d9aa3);
+  background-size: cover;
+  background-position: center;
   margin-bottom: 10px;
-  transition: transform 0.15s, box-shadow 0.15s;
+  transition:
+    transform 0.15s,
+    box-shadow 0.15s;
 }
 .playlist-card a:hover .card-cover {
   transform: translateY(-2px);

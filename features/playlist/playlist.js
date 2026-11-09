@@ -203,6 +203,16 @@ async function load() {
   titleEl.textContent = playlistName
   subEl.textContent = `${tracks.length}곡`
 
+  // 저장된 커버 사진이 있으면 보여주고, 없으면 기본 그라데이션을 쓴다.
+  const cover = document.querySelector('.pl-cover')
+  if (cover) {
+    if (playlist.coverUrl) {
+      cover.style.backgroundImage = `url(${playlist.coverUrl})`
+    } else {
+      cover.style.backgroundImage = ''
+    }
+  }
+
   clearRows()
   table.append(...tracks.map(createRow))
 
@@ -210,6 +220,7 @@ async function load() {
   emptyBox.hidden = tracks.length > 0
   playButton.disabled = tracks.length === 0
 }
+
 
 // ---- 시작 ----
 // router 가 화면을 넣은 뒤에 주소에서 뽑은 id 를 담아서 불러준다.
