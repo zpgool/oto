@@ -2,6 +2,7 @@
 // 지난 30일 동안 많이 들은 노래를 1~3위 시상대와 4위 아래 표로 보여준다.
 import { getPlayChart } from './chartStore.js'
 import { attachHeart } from '../favorite/favoriteHeart.js'
+import { playTrack } from '../../shared/js/player.js'
 
 // ---- DOM ----
 // 화면에 들어올 때마다 새로 만들어지므로 init() 에서 다시 찾는다.
@@ -64,6 +65,12 @@ function createPodiumItem(track, rank) {
 
   item.append(cover, number, name, artist, count)
 
+  // 누르면 재생한다. (목록 화면들과 같은 방식)
+  item.addEventListener('click', (event) => {
+    if (event.target.closest('button')) return
+    playTrack(track)
+  })
+
   return item
 }
 
@@ -71,6 +78,12 @@ function createPodiumItem(track, rank) {
 function createRow(track) {
   const row = document.createElement('div')
   row.className = 'table-row'
+
+  // 행을 누르면 재생한다. 단, 하트는 자기 동작이 따로 있어서 제외한다.
+  row.addEventListener('click', (event) => {
+    if (event.target.closest('button')) return
+    playTrack(track)
+  })
 
   const title = createCell('col-title')
 

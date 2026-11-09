@@ -102,10 +102,7 @@
   visibility: hidden;
 }
 
-/* 차트는 보기만 하는 화면이라 눌러도 재생되지 않는다 */
-.chart-rest .table-row {
-  cursor: default;
-}
-.chart-rest .table-row:hover {
-  background: none;
+/* 누르면 재생되는 자리라 손가락 커서를 보여준다 */
+.podium-item:not(.podium-empty) {
+  cursor: pointer;
 }
