@@ -2,7 +2,7 @@
 // 플레이리스트 한 개를 보여준다. 주소의 #/playlist/<id> 에서 id 를 받는다.
 import { getPlaylist, removeTrack, reorderTracks } from './playlistStore.js'
 import { openPlaylistSettingsModal } from './playlistModal.js'
-import { playTrack } from '../../shared/js/player.js'
+import { playTrack, playQueue } from '../../shared/js/player.js'
 import { attachHeart } from '../favorite/favoriteHeart.js'
 import { showToast } from '../../shared/js/toast.js'
 
@@ -237,9 +237,9 @@ export function init(params) {
   table = document.querySelector('#pl-table')
   emptyBox = document.querySelector('#pl-empty')
 
-  // 아직 재생 목록 기능이 없어서, 첫 곡만 튼다.
+  // 전체 재생: 담긴 순서대로 재생목록에 넣는다. 한 곡이 끝나면 다음 곡으로 넘어간다.
   playButton.addEventListener('click', () => {
-    if (tracks.length > 0) playTrack(tracks[0])
+    if (tracks.length > 0) playQueue(tracks)
   })
 
   addSongButton.addEventListener('click', () => {

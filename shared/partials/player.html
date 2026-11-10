@@ -18,11 +18,11 @@
     <!-- 가운데: 재생 조작 + 진행바 -->
     <div class="player-controls">
         <div class="control-buttons">
-            <!-- 셔플/이전/다음/반복은 아직 기능 없음 -->
+            <!-- 셔플/반복은 아직 기능 없음 -->
             <button type="button" aria-label="셔플" disabled>⇄</button>
-            <button type="button" aria-label="이전 곡" disabled>◀</button>
+            <button type="button" id="btn-prev" aria-label="이전 곡" disabled>◀</button>
             <button type="button" class="btn-play" id="btn-play" aria-label="재생/일시정지" disabled>▶</button>
-            <button type="button" aria-label="다음 곡" disabled>▶</button>
+            <button type="button" id="btn-next" aria-label="다음 곡" disabled>▶</button>
             <button type="button" aria-label="반복" disabled>⟳</button>
         </div>
         <div class="progress">
@@ -32,9 +32,9 @@
         </div>
     </div>
 
-    <!-- 오른쪽: 재생 목록(기능 없음) + 음량 -->
+    <!-- 오른쪽: 재생 목록 + 음량 -->
     <div class="player-extra">
-        <button type="button" aria-label="재생 목록">☰</button>
+        <button type="button" id="btn-queue" aria-label="재생 목록" disabled>☰</button>
         <button type="button" id="btn-mute" aria-label="음소거">🔈</button>
         <input type="range" class="volume-bar" id="volume-bar" min="0" max="100" value="70" aria-label="음량">
     </div>

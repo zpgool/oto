@@ -1,8 +1,10 @@
 // features/playlist/playlistModal.js
-// 플레이리스트 관련 팝업 두 개.
-//   - openCreatePlaylistModal()       이름을 받아 새 플레이리스트를 만든다
-//   - openAddToPlaylistModal(track)   어느 플레이리스트에 담을지 고른다
-// <dialog> 를 쓰기 때문에 Esc 로 닫기와 뒤 배경 어둡게가 브라우저 기본으로 된다.
+// 플레이리스트 관련 팝업 세 개.
+//   - openCreatePlaylistModal()         이름과 커버를 받아 새 플레이리스트를 만든다
+//   - openAddToPlaylistModal(track)     어느 플레이리스트에 담을지 고른다
+//   - openPlaylistSettingsModal(pl)     이름·커버를 바꾸거나 삭제한다
+// 팝업 껍데기는 shared/js/modal.js 에 있다. (재생목록 팝업도 같은 것을 쓴다)
+import { openDialog } from "../../shared/js/modal.js";
 import {
   listPlaylists,
   createPlaylist,
@@ -14,92 +16,6 @@ import {
   setCover,
 } from "./playlistStore.js";
 import { showToast } from "../../shared/js/toast.js";
-
-// ---- 팝업 껍데기 ----
-// 제목과 닫기 버튼이 달린 빈 팝업을 띄우고, 내용을 채울 자리를 돌려준다.
-function openDialog(title) {
-  const dialog = document.createElement("dialog");
-  dialog.className = "modal";
-
-  const head = document.createElement("div");
-  head.className = "modal-head";
-
-  const heading = document.createElement("h2");
-  heading.className = "modal-title";
-  heading.textContent = title;
-
-  const closeButton = document.createElement("button");
-  closeButton.type = "button";
-  closeButton.className = "modal-close";
-  closeButton.setAttribute("aria-label", "닫기");
-  closeButton.textContent = "×";
-  closeButton.addEventListener("click", () => dialog.close());
-
-  head.append(heading, closeButton);
-
-  const body = document.createElement("div");
-  body.className = "modal-body";
-
-  dialog.append(head, body);
-  document.body.append(dialog);
-
-  // 닫히면 흔적을 남기지 않는다.
-  dialog.addEventListener("close", () => dialog.remove());
-
-  // 팝업 바깥(어두운 부분)을 누르면 닫는다.
-  dialog.addEventListener("click", (event) => {
-    if (event.target === dialog) dialog.close();
-  });
-
-  dialog.showModal();
-
-  return { dialog, body };
-}
-
-// ---- 커버 사진 고르기 ----
-// 만들기 팝업과 설정 팝업이 같이 쓴다.
-// currentUrl 을 주면 지금 걸려 있는 커버를 미리 보여준다. (설정 팝업)
-//
-// 돌려주는 것
-//   button    : 누르면 파일 고르는 창이 열리는 미리보기 버튼
-//   fileInput : 숨겨진 <input type="file">. button 과 같이 붙여야 한다
-//   getFile() : 사용자가 고른 파일. 고르지 않았으면 null
-function createCoverPicker(currentUrl) {
-  let file = null;
-
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = "modal-cover-pick";
-
-  // 이미 커버가 있으면 그것부터 보여준다. 없으면 안내 글자.
-  if (currentUrl) {
-    button.style.backgroundImage = `url(${currentUrl})`;
-    button.classList.add("has-image");
-    button.setAttribute("aria-label", "커버 사진 바꾸기");
-  } else {
-    button.textContent = "＋ 커버 사진";
-  }
-
-  const fileInput = document.createElement("input");
-  fileInput.type = "file";
-  fileInput.accept = "image/*";
-  fileInput.hidden = true;
-
-  button.addEventListener("click", () => fileInput.click());
-
-  // 사진을 고르면 버튼 안에 미리보기로 보여준다.
-  fileInput.addEventListener("change", () => {
-    const picked = fileInput.files[0];
-    if (!picked) return;
-
-    file = picked;
-    button.textContent = "";
-    button.style.backgroundImage = `url(${URL.createObjectURL(picked)})`;
-    button.classList.add("has-image");
-  });
-
-  return { button, fileInput, getFile: () => file };
-}
 
 function createMessage(className, text) {
   const message = document.createElement("p");
