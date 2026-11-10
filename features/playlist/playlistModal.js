@@ -17,6 +17,51 @@ import {
 } from "./playlistStore.js";
 import { showToast } from "../../shared/js/toast.js";
 
+// ---- 커버 사진 고르기 ----
+// 만들기 팝업과 설정 팝업이 같이 쓴다.
+// currentUrl 을 주면 지금 걸려 있는 커버를 미리 보여준다. (설정 팝업)
+//
+// 돌려주는 것
+//   button    : 누르면 파일 고르는 창이 열리는 미리보기 버튼
+//   fileInput : 숨겨진 <input type="file">. button 과 같이 붙여야 한다
+//   getFile() : 사용자가 고른 파일. 고르지 않았으면 null
+function createCoverPicker(currentUrl) {
+  let file = null;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "modal-cover-pick";
+
+  // 이미 커버가 있으면 그것부터 보여준다. 없으면 안내 글자.
+  if (currentUrl) {
+    button.style.backgroundImage = `url(${currentUrl})`;
+    button.classList.add("has-image");
+    button.setAttribute("aria-label", "커버 사진 바꾸기");
+  } else {
+    button.textContent = "＋ 커버 사진";
+  }
+
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = "image/*";
+  fileInput.hidden = true;
+
+  button.addEventListener("click", () => fileInput.click());
+
+  // 사진을 고르면 버튼 안에 미리보기로 보여준다.
+  fileInput.addEventListener("change", () => {
+    const picked = fileInput.files[0];
+    if (!picked) return;
+
+    file = picked;
+    button.textContent = "";
+    button.style.backgroundImage = `url(${URL.createObjectURL(picked)})`;
+    button.classList.add("has-image");
+  });
+
+  return { button, fileInput, getFile: () => file };
+}
+
 function createMessage(className, text) {
   const message = document.createElement("p");
   message.className = className;
