@@ -185,3 +185,13 @@
   color: var(--text-muted);
   cursor: default;
 }
+
+/* 재생목록 팝업에서 지금 듣고 있는 곡.
+   .modal-item:disabled 가 회색으로 죽이기 때문에, 그 뒤에 두어 색을 되살린다. */
+.modal-item.queue-current {
+  color: var(--accent);
+  font-weight: 600;
+}
+.modal-item.queue-current .modal-item-note {
+  color: var(--accent);
+}

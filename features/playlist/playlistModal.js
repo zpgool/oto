@@ -1,8 +1,10 @@
 // features/playlist/playlistModal.js
-// 플레이리스트 관련 팝업 두 개.
-//   - openCreatePlaylistModal()       이름을 받아 새 플레이리스트를 만든다
-//   - openAddToPlaylistModal(track)   어느 플레이리스트에 담을지 고른다
-// <dialog> 를 쓰기 때문에 Esc 로 닫기와 뒤 배경 어둡게가 브라우저 기본으로 된다.
+// 플레이리스트 관련 팝업 세 개.
+//   - openCreatePlaylistModal()         이름과 커버를 받아 새 플레이리스트를 만든다
+//   - openAddToPlaylistModal(track)     어느 플레이리스트에 담을지 고른다
+//   - openPlaylistSettingsModal(pl)     이름·커버를 바꾸거나 삭제한다
+// 팝업 껍데기는 shared/js/modal.js 에 있다. (재생목록 팝업도 같은 것을 쓴다)
+import { openDialog } from "../../shared/js/modal.js";
 import {
   listPlaylists,
   createPlaylist,
@@ -15,45 +17,49 @@ import {
 } from "./playlistStore.js";
 import { showToast } from "../../shared/js/toast.js";
 
-// ---- 팝업 껍데기 ----
-// 제목과 닫기 버튼이 달린 빈 팝업을 띄우고, 내용을 채울 자리를 돌려준다.
-function openDialog(title) {
-  const dialog = document.createElement("dialog");
-  dialog.className = "modal";
+// ---- 커버 사진 고르기 ----
+// 만들기 팝업과 설정 팝업이 같이 쓴다.
+// currentUrl 을 주면 지금 걸려 있는 커버를 미리 보여준다. (설정 팝업)
+//
+// 돌려주는 것
+//   button    : 누르면 파일 고르는 창이 열리는 미리보기 버튼
+//   fileInput : 숨겨진 <input type="file">. button 과 같이 붙여야 한다
+//   getFile() : 사용자가 고른 파일. 고르지 않았으면 null
+function createCoverPicker(currentUrl) {
+  let file = null;
 
-  const head = document.createElement("div");
-  head.className = "modal-head";
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "modal-cover-pick";
 
-  const heading = document.createElement("h2");
-  heading.className = "modal-title";
-  heading.textContent = title;
+  // 이미 커버가 있으면 그것부터 보여준다. 없으면 안내 글자.
+  if (currentUrl) {
+    button.style.backgroundImage = `url(${currentUrl})`;
+    button.classList.add("has-image");
+    button.setAttribute("aria-label", "커버 사진 바꾸기");
+  } else {
+    button.textContent = "＋ 커버 사진";
+  }
 
-  const closeButton = document.createElement("button");
-  closeButton.type = "button";
-  closeButton.className = "modal-close";
-  closeButton.setAttribute("aria-label", "닫기");
-  closeButton.textContent = "×";
-  closeButton.addEventListener("click", () => dialog.close());
+  const fileInput = document.createElement("input");
+  fileInput.type = "file";
+  fileInput.accept = "image/*";
+  fileInput.hidden = true;
 
-  head.append(heading, closeButton);
+  button.addEventListener("click", () => fileInput.click());
 
-  const body = document.createElement("div");
-  body.className = "modal-body";
+  // 사진을 고르면 버튼 안에 미리보기로 보여준다.
+  fileInput.addEventListener("change", () => {
+    const picked = fileInput.files[0];
+    if (!picked) return;
 
-  dialog.append(head, body);
-  document.body.append(dialog);
-
-  // 닫히면 흔적을 남기지 않는다.
-  dialog.addEventListener("close", () => dialog.remove());
-
-  // 팝업 바깥(어두운 부분)을 누르면 닫는다.
-  dialog.addEventListener("click", (event) => {
-    if (event.target === dialog) dialog.close();
+    file = picked;
+    button.textContent = "";
+    button.style.backgroundImage = `url(${URL.createObjectURL(picked)})`;
+    button.classList.add("has-image");
   });
 
-  dialog.showModal();
-
-  return { dialog, body };
+  return { button, fileInput, getFile: () => file };
 }
 
 function createMessage(className, text) {
@@ -70,34 +76,11 @@ export function openCreatePlaylistModal() {
 
   return new Promise((resolve) => {
     let created = null;
-    let coverFile = null; // 사용자가 고른 커버 이미지 파일
 
     const form = document.createElement("form");
     form.className = "modal-form";
 
-    // 커버 미리보기 겸 고르기 버튼. 누르면 숨은 파일 입력창을 연다.
-    const coverButton = document.createElement("button");
-    coverButton.type = "button";
-    coverButton.className = "modal-cover-pick";
-    coverButton.textContent = "＋ 커버 사진";
-
-    const fileInput = document.createElement("input");
-    fileInput.type = "file";
-    fileInput.accept = "image/*";
-    fileInput.hidden = true;
-
-    coverButton.addEventListener("click", () => fileInput.click());
-
-    // 사진을 고르면 버튼 안에 미리보기로 보여준다.
-    fileInput.addEventListener("change", () => {
-      const file = fileInput.files[0];
-      if (!file) return;
-
-      coverFile = file;
-      coverButton.textContent = "";
-      coverButton.style.backgroundImage = `url(${URL.createObjectURL(file)})`;
-      coverButton.classList.add("has-image");
-    });
+    const cover = createCoverPicker(null);
 
     const input = document.createElement("input");
     input.type = "text";
@@ -125,7 +108,7 @@ export function openCreatePlaylistModal() {
     submitButton.textContent = "만들기";
 
     actions.append(cancelButton, submitButton);
-    form.append(coverButton, fileInput, input, error, actions);
+    form.append(cover.button, cover.fileInput, input, error, actions);
     body.append(form);
 
     form.addEventListener("submit", async (event) => {
@@ -144,6 +127,7 @@ export function openCreatePlaylistModal() {
 
         // 사진을 골랐으면 올린 뒤 커버로 저장한다.
         // 플레이리스트는 이미 만들어졌으니, 사진 올리기만 실패해도 치명적이지 않다.
+        const coverFile = cover.getFile();
         if (coverFile) {
           try {
             const coverUrl = await uploadCover(coverFile);
@@ -275,17 +259,22 @@ export async function openAddToPlaylistModal(track) {
   body.append(newButton, error);
 }
 
-// ---- 플레이리스트 설정 (이름 변경 / 삭제) ----
-// 무엇을 했는지 돌려준다. { action: 'renamed', name } 또는 { action: 'deleted' }, 그냥 닫으면 null.
+// ---- 플레이리스트 설정 (이름·커버 변경 / 삭제) ----
+// 무엇을 했는지 돌려준다. 그냥 닫으면 null.
+//   { action: 'saved', name, coverUrl }   이름이나 커버를 저장함 (coverUrl 은 안 바꿨으면 null)
+//   { action: 'deleted' }                 삭제함
 export function openPlaylistSettingsModal(playlist) {
   const { dialog, body } = openDialog("플레이리스트 설정");
 
   return new Promise((resolve) => {
     let result = null;
 
-    // --- 이름 변경 ---
+    // --- 이름·커버 변경 ---
     const form = document.createElement("form");
     form.className = "modal-form";
+
+    // 만들기 팝업과 같은 UI. 지금 커버를 미리 보여준다.
+    const cover = createCoverPicker(playlist.coverUrl);
 
     const input = document.createElement("input");
     input.type = "text";
@@ -305,31 +294,61 @@ export function openPlaylistSettingsModal(playlist) {
     const saveButton = document.createElement("button");
     saveButton.type = "submit";
     saveButton.className = "modal-btn modal-btn-primary";
-    saveButton.textContent = "이름 저장";
+    saveButton.textContent = "저장";
 
     actions.append(saveButton);
-    form.append(input, error, actions);
+    form.append(cover.button, cover.fileInput, input, error, actions);
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
 
       const name = input.value.trim();
-      if (!name || name === playlist.name) return;
+      if (!name) return;
+
+      const coverFile = cover.getFile();
+      const nameChanged = name !== playlist.name;
+
+      // 둘 다 그대로면 할 일이 없다.
+      if (!nameChanged && !coverFile) {
+        dialog.close();
+        return;
+      }
 
       saveButton.disabled = true;
       saveButton.textContent = "저장 중...";
       error.hidden = true;
 
       try {
-        const renamed = await renamePlaylist(playlist.id, name);
-        result = { action: "renamed", name: renamed.name };
+        if (nameChanged) {
+          const renamed = await renamePlaylist(playlist.id, name);
+
+          // 뒤의 사진 올리기가 실패하더라도 이름은 이미 바뀌었다.
+          // 여기서 result 를 채워두면, 팝업을 닫을 때 화면 제목이 따라간다.
+          result = { action: "saved", name: renamed.name, coverUrl: null };
+        }
+
+        // 사진 올리기는 이름 저장보다 오래 걸리고 실패할 수도 있다.
+        if (coverFile) {
+          const coverUrl = await uploadCover(coverFile);
+          await setCover(playlist.id, coverUrl);
+
+          result = {
+            action: "saved",
+            name: result?.name ?? playlist.name,
+            coverUrl,
+          };
+        }
+
         dialog.close();
-        showToast("이름을 바꿨습니다");
+
+        if (nameChanged && coverFile) showToast("이름과 커버를 바꿨습니다");
+        else if (nameChanged) showToast("이름을 바꿨습니다");
+        else showToast("커버 사진을 바꿨습니다");
       } catch (failure) {
-        error.textContent = `바꾸지 못했습니다: ${failure.message}`;
+        error.textContent = `저장하지 못했습니다: ${failure.message}`;
         error.hidden = false;
         saveButton.disabled = false;
-        saveButton.textContent = "이름 저장";
+        saveButton.textContent = "저장";
       }
     });
 
