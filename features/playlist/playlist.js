@@ -8,6 +8,7 @@ import { showToast } from '../../shared/js/toast.js'
 
 let playlistId = null
 let playlistName = ''
+let playlistCoverUrl = null
 let tracks = []
 let draggingRow = null
 
@@ -176,6 +177,14 @@ function setupDragging() {
 }
 
 // ---- 불러오기 ----
+// 저장된 커버 사진이 있으면 보여주고, 없으면 기본 그라데이션을 쓴다.
+function showCover() {
+  const cover = document.querySelector('.pl-cover')
+  if (!cover) return
+
+  cover.style.backgroundImage = playlistCoverUrl ? `url(${playlistCoverUrl})` : ''
+}
+
 async function load() {
   let playlist
 
@@ -203,15 +212,8 @@ async function load() {
   titleEl.textContent = playlistName
   subEl.textContent = `${tracks.length}곡`
 
-  // 저장된 커버 사진이 있으면 보여주고, 없으면 기본 그라데이션을 쓴다.
-  const cover = document.querySelector('.pl-cover')
-  if (cover) {
-    if (playlist.coverUrl) {
-      cover.style.backgroundImage = `url(${playlist.coverUrl})`
-    } else {
-      cover.style.backgroundImage = ''
-    }
-  }
+  playlistCoverUrl = playlist.coverUrl
+  showCover()
 
   clearRows()
   table.append(...tracks.map(createRow))
@@ -245,7 +247,11 @@ export function init(params) {
   })
 
   settingsButton.addEventListener('click', async () => {
-    const done = await openPlaylistSettingsModal({ id: playlistId, name: playlistName })
+    const done = await openPlaylistSettingsModal({
+      id: playlistId,
+      name: playlistName,
+      coverUrl: playlistCoverUrl,
+    })
     if (!done) return
 
     // 지웠으면 더 볼 화면이 없으니 홈으로 보낸다.
@@ -256,6 +262,12 @@ export function init(params) {
 
     playlistName = done.name
     titleEl.textContent = playlistName
+
+    // 커버를 바꿨을 때만 주소가 온다. 안 바꿨으면 그대로 둔다.
+    if (done.coverUrl) {
+      playlistCoverUrl = done.coverUrl
+      showCover()
+    }
   })
 
   setupDragging()
