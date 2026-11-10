@@ -1,2 +1,2 @@
-shared/js/supabase.js
+# YouTube API 키가 들어 있다. 유출되면 남이 하루 할당량을 쓸 수 있어서 제외한다.
 features/search/youtube.js
